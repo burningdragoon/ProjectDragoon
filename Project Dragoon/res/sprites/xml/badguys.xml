@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<sprite>
+	    <name>soldier</name>
+		<image-file>/images/sprites/badguy.png</image-file>
+		<dimensions auto="true" width="" height=""  />
+		<columns>1</columns>
+		<current-frame>0</current-frame>
+		<total-frames>1</total-frames>
+		<animations>
+			<animation-list>
+			</animation-list>
+			<frame-timer>0</frame-timer>
+			<direction>1</direction>
+		</animations>
+	</sprite>
+</resources>

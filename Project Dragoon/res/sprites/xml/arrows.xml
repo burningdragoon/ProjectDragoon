@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	
+	<sprite>
+	    <name>horiz_arrow</name>
+		<image-file>/images/sprites/menu_arrow.png</image-file>
+		<dimensions auto="true" width="" height="" />
+		<columns>2</columns>
+		<current-frame>0</current-frame>
+		<total-frames>2</total-frames>
+		<animations>
+			<animation-list>
+			</animation-list>
+			<frame-timer>250</frame-timer>
+			<direction>1</direction>
+		</animations>
+	</sprite>
+	
+	<sprite>
+	    <name>vert_arrow</name>
+		<image-file>/images/sprites/window_arrow.png</image-file>
+		<dimensions auto="true" width="" height="" />
+		<columns>2</columns>
+		<current-frame>0</current-frame>
+		<total-frames>2</total-frames>
+		<animations>
+			<animation-list>
+			</animation-list>
+			<frame-timer>250</frame-timer>
+			<direction>1</direction>
+		</animations>
+	</sprite>
+	
+</resources>

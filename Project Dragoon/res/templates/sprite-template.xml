@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<sprite>
+	    <name></name>
+		<image-file></image-file>
+		<dimensions auto="" width="" height=""  />
+		<columns></columns>
+		<current-frame></current-frame>
+		<total-frames></total-frames>
+		<animations>
+			<animation-list>
+				<sprite-animation>
+				    <name></name>
+					<frames></frames>
+					<delay></delay>
+				</sprite-animation>
+			</animation-list>
+			<frame-timer></frame-timer>
+			<direction></direction>
+		</animations>
+	</sprite>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<sprite>
+	    <name>kain</name>
+		<image-file>/images/sprites/kain_spritesheet_x2.png</image-file>
+		<dimensions auto="true" width="" height="" />
+		<columns>14</columns>
+		<current-frame>0</current-frame>
+		<total-frames>14</total-frames>
+		<animations>
+			<animation-list>
+				<sprite-animation>
+				    <name>Rest</name>
+					<frames>1</frames>
+					<delay>0</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Walk</name>
+					<frames>1,2</frames>
+					<delay>200</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Attack</name>
+					<frames>6,5</frames>
+					<delay>150</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Prep</name>
+					<frames>3</frames>
+					<delay>0</delay>
+				</sprite-animation>
+				
+			</animation-list>
+			<frame-timer>0</frame-timer>
+			<direction>1</direction>
+		</animations>
+	</sprite>
+</resources>

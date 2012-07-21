@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<sprite>
+	    <name>demo</name>
+		<image-file>/images/basic_window_frame.png</image-file>
+		<dimensions width="45" height="45" auto="true" />
+		<columns>3</columns>
+		<current-frame>1</current-frame>
+		<total-frames>9</total-frames>
+		<animations>
+			<animation-list>
+				<sprite-animation>
+				    <name>Short Loop</name>
+					<frames>0,1,2,3</frames>
+					<delay>100</delay>
+				</sprite-animation>
+			</animation-list>
+			<frame-timer>300</frame-timer>
+			<direction>1</direction>
+		</animations>
+	</sprite>
+</resources>

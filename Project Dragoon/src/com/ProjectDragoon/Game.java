@@ -13,7 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.RepaintManager;
 
-import com.ProjectDragoon.testpanels.WindowPanel;
+import com.ProjectDragoon.testpanels.ScrollingTilesPanel;
 import com.ProjectDragoon.util.NoRepaintManager;
 
 public class Game extends JFrame implements WindowListener {
@@ -21,7 +21,7 @@ public class Game extends JFrame implements WindowListener {
 	private static final long serialVersionUID = 1L;
 	private static int DEFAULT_FPS = 60;
 	private static final int WIDTH = 800;
-	private static final int HEIGHT = 600;
+	private static final int HEIGHT = 640;
 	
 	// Account for the window frame.
 	// will worry about programmatic way to do this later...
@@ -34,7 +34,9 @@ public class Game extends JFrame implements WindowListener {
 	//private SimpleBattlePanel gamePanel;
 	//private ImagePanel gamePanel;
 	//private SimpleAnimatedBattlePanel gamePanel;
-	private WindowPanel gamePanel;
+	//private WindowPanel gamePanel;
+	//private TileMapTestPanel gamePanel;
+	private ScrollingTilesPanel gamePanel;
 	
 	public int i;
 	
@@ -47,7 +49,9 @@ public class Game extends JFrame implements WindowListener {
 		//gamePanel = new SimpleBattlePanel(WIDTH, HEIGHT, period);
 		//gamePanel = new ImagePanel(WIDTH, HEIGHT, period);
 		//gamePanel = new SimpleAnimatedBattlePanel(this, WIDTH, HEIGHT, period);
-		gamePanel = new WindowPanel(this, WIDTH, HEIGHT, period);
+		//gamePanel = new WindowPanel(this, WIDTH, HEIGHT, period);
+		//gamePanel = new TileMapTestPanel(this, WIDTH, HEIGHT, period);
+		gamePanel = new ScrollingTilesPanel(this, WIDTH, HEIGHT, period);
 		
 		// Absolute Positioning is not the best approach for UI, but whatevs for now.
         gamePanel.setLayout(null);

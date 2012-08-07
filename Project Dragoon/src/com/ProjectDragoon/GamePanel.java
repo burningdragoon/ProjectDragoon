@@ -84,6 +84,15 @@ public class GamePanel extends JPanel implements Runnable {
 	 * Selectors and Mutators
 	 */
 	
+	public int getScreenWidth()
+	{
+		return PWIDTH;
+	}
+	public int getScreenHeight()
+	{
+		return PHEIGHT;
+	}
+	
 	public double getFPS()
 	{
 		return currentFPS;

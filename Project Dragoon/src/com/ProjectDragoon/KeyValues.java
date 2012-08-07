@@ -10,6 +10,8 @@ public class KeyValues {
 	private KeyValue BACK;
 	private KeyValue UP;
 	private KeyValue DOWN;
+	private KeyValue RIGHT;
+	private KeyValue LEFT;
 	
 	public KeyValues()
 	{
@@ -18,6 +20,8 @@ public class KeyValues {
 		
 		UP = new KeyValue("Up", KeyEvent.VK_UP);
 		DOWN = new KeyValue("Down", KeyEvent.VK_DOWN);
+		RIGHT = new KeyValue("Right", KeyEvent.VK_RIGHT);
+		LEFT = new KeyValue("Left", KeyEvent.VK_LEFT);
 	}
 	
 	public int ActionKey()
@@ -54,6 +58,24 @@ public class KeyValues {
 	public String DownName()
 	{
 		return DOWN.name;
+	}
+	
+	public int RightKey()
+	{
+		return RIGHT.keycode;
+	}
+	public String RightName()
+	{
+		return RIGHT.name;
+	}
+	
+	public int LeftKey()
+	{
+		return LEFT.keycode;
+	}
+	public String LeftName()
+	{
+		return LEFT.name;
 	}
 	
 	

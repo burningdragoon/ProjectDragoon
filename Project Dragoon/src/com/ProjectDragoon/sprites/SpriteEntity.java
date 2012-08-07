@@ -3,6 +3,8 @@ package com.ProjectDragoon.sprites;
 import java.awt.Graphics;
 
 import com.ProjectDragoon.Entity;
+import com.ProjectDragoon.physics.CollisionMap;
+import com.ProjectDragoon.physics.CollisionPointMap;
 import com.ProjectDragoon.util.Vector;
 
 /**
@@ -17,11 +19,15 @@ public class SpriteEntity extends Entity {
 	
 	public Sprite sprite;
 	private Vector position;
+	private Vector velocity;
+	private CollisionMap collisionMap;
 	
 	public SpriteEntity(Sprite sprite, Vector position)
 	{
 		this.sprite = sprite.copy();
 		this.position = new Vector(position);
+		velocity = new Vector();
+		collisionMap = new CollisionMap(position);
 	}
 	
 	/*
@@ -41,7 +47,50 @@ public class SpriteEntity extends Entity {
 	public void setYPos(double y) {	position.setY(y);	}
 	public void setYPos(int y) {	position.setY(y);	}
 	
+	public Vector getVelocity() {	return velocity;	}
+	public void setVelocity(Vector v) { velocity.set(v);	}
+	public void setVelocity(double x, double y) { velocity.set(x, y, 0);	}
+	public void setVelocity(int x, int y) { velocity.set(x, y, 0);	}
+	
+	public double getXVel() { return velocity.getX();	}
+	public void setXVel(double x) { velocity.setX(x);	}
+	public void setXVel(int x) { velocity.setX(x);	}
+	
+	public double getYVel() { return velocity.getY();	}
+	public void setYVel(double y) { velocity.setY(y);	}
+	public void setYVel(int y) { velocity.setY(y);	}
+	
+	public int getWidth() { return sprite.getWidth(); }
+	public int getHeight() { return sprite.getHeight(); }
+	
+	public CollisionMap getCollisionMap() { return collisionMap; }
+	
 	/* -- End S&M -- */
+	
+	public void move()
+	{
+		double px = getXPos();
+		double py = getYPos();
+		double vx = getXVel();
+		double vy = getYVel();
+		
+		double mx = px + vx;
+		double my = py + vy;
+		//position.move(mx, my);
+		position.move(vx,  vy);
+		collisionMap.getPosition().move(vx, vy);
+	}
+	
+	public void moveX(int mx)
+	{
+		position.moveX(mx);
+		collisionMap.getPosition().moveX(mx);
+	}
+	public void moveY(int my)
+	{
+		position.moveY(my);
+		collisionMap.getPosition().moveY(my);
+	}
 	
 	@Override
 	public Object copy() {
@@ -51,7 +100,7 @@ public class SpriteEntity extends Entity {
 
 	@Override
 	public void update() {
-		
+		move();
 	}
 
 	@Override
@@ -62,6 +111,7 @@ public class SpriteEntity extends Entity {
 	@Override
 	public void draw(Graphics g) {
 		sprite.draw(g, position);
+		collisionMap.draw(g);
 	}
 
 }

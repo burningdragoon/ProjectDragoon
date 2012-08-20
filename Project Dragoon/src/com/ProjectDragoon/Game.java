@@ -13,7 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.RepaintManager;
 
-import com.ProjectDragoon.testpanels.ScrollingTilesPanel;
+import com.ProjectDragoon.testpanels.PlatformerPanel;
 import com.ProjectDragoon.util.NoRepaintManager;
 
 public class Game extends JFrame implements WindowListener {
@@ -36,7 +36,8 @@ public class Game extends JFrame implements WindowListener {
 	//private SimpleAnimatedBattlePanel gamePanel;
 	//private WindowPanel gamePanel;
 	//private TileMapTestPanel gamePanel;
-	private ScrollingTilesPanel gamePanel;
+	//private ScrollingTilesPanel gamePanel;
+	private PlatformerPanel gamePanel;
 	
 	public int i;
 	
@@ -51,7 +52,8 @@ public class Game extends JFrame implements WindowListener {
 		//gamePanel = new SimpleAnimatedBattlePanel(this, WIDTH, HEIGHT, period);
 		//gamePanel = new WindowPanel(this, WIDTH, HEIGHT, period);
 		//gamePanel = new TileMapTestPanel(this, WIDTH, HEIGHT, period);
-		gamePanel = new ScrollingTilesPanel(this, WIDTH, HEIGHT, period);
+		//gamePanel = new ScrollingTilesPanel(this, WIDTH, HEIGHT, period);
+		gamePanel = new PlatformerPanel(this, WIDTH, HEIGHT, period);
 		
 		// Absolute Positioning is not the best approach for UI, but whatevs for now.
         gamePanel.setLayout(null);

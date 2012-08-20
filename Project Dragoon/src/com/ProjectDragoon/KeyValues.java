@@ -15,6 +15,7 @@ public class KeyValues {
 	
 	public KeyValues()
 	{
+		//ACTION = new KeyValue("A", KeyEvent.VK_A);
 		ACTION = new KeyValue("A", KeyEvent.VK_A);
 		BACK = new KeyValue("Enter", KeyEvent.VK_ENTER);
 		

@@ -63,6 +63,8 @@ public class KeyInputHandler implements KeyListener {
 	/* ---- KeyListener Methods ---- */
 
 	public void keyPressed(KeyEvent e) {
+		//if(!keys[e.getKeyCode()])
+		//	System.out.println("Key Pressed: " + e.getKeyCode());
 		toggle(e, true);
 	}
 

@@ -132,7 +132,12 @@ public class Texture implements Utility{
 	 */
 	public void draw(Graphics g, int desX, int desY, int srcX, int srcY, int w, int h)
 	{
-		draw(g, desX, desY, srcX, srcY, w, h, 1.0);
+		draw(g, desX, desY, srcX, srcY, w, h, 1.0, true);
+	}
+	
+	public void draw(Graphics g, int desX, int desY, int srcX, int srcY, int width, int height, boolean forward)
+	{
+		draw(g, desX, desY, srcX, srcY, width, height, 1.0, forward);
 	}
 	
 	/**
@@ -150,6 +155,14 @@ public class Texture implements Utility{
 	public void draw(Graphics g, int desX, int desY, int srcX, int srcY, int w, int h, double scale)
 	{
 		g.drawImage(image, desX, desY, desX + (int)(w * scale), desY + (int)(h * scale), srcX, srcY, srcX+w, srcY+h, null);
+	}
+	
+	public void draw(Graphics g, int desX, int desY, int srcX, int srcY, int w, int h, double scale, boolean forward)
+	{
+		if(forward)
+			g.drawImage(image, desX, desY, desX + (int)(w * scale), desY + (int)(h * scale), srcX, srcY, srcX+w, srcY+h, null);
+		else
+			g.drawImage(image, desX + (int)(w * scale), desY, desX, desY + (int)(h * scale), srcX, srcY, srcX + w, srcY + h, null);
 	}
 	
 	/* -- End Drawing methods -- */

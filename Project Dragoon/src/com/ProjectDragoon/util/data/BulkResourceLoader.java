@@ -30,6 +30,7 @@ public class BulkResourceLoader {
 		sprites.add("res/sprites/xml/kain.xml");
 		sprites.add("res/sprites/xml/arrows.xml");
 		sprites.add("res/sprites/xml/badguys.xml");
+		sprites.add("res/sprites/xml/dragoon.xml");
 		
 		loader.loadSprites(sprites);
 		

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<sprite>
+	    <name>dragoon</name>
+		<image-file>/images/sprites/custom_dragoon_spritesheet_x2.png</image-file>
+		<dimensions auto="true" width="" height=""  />
+		<columns>24</columns>
+		<current-frame>0</current-frame>
+		<total-frames>24</total-frames>
+		<animations>
+			<animation-list>
+				<sprite-animation>
+				    <name>Rest_Down</name>
+					<frames>0</frames>
+					<delay>0</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Walk_Down</name>
+					<frames>0,1,0,2</frames>
+					<delay>200</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Rest_Up</name>
+				    <frames>8</frames>
+				    <delay>0</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Walk_Up</name>
+				    <frames>8,9,8,10</frames>
+				    <delay>200</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Rest_Right</name>
+				    <frames>12</frames>
+				    <delay>0</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Walk_Right</name>
+				    <frames>12,13,12,14</frames>
+				    <delay>200</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Rest_Left</name>
+				    <frames>18</frames>
+				    <delay>0</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Walk_Left</name>
+				    <frames>18,19,18,20</frames>
+				    <delay>200</delay>
+				</sprite-animation>
+
+			</animation-list>
+			
+			<frame-timer>0</frame-timer>
+			<direction>1</direction>
+		</animations>
+	</sprite>
+</resources>

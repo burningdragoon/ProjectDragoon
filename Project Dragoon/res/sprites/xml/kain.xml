@@ -33,6 +33,24 @@
 					<delay>0</delay>
 				</sprite-animation>
 				
+				<sprite-animation>
+				    <name>Jump</name>
+				    <frames>10</frames>
+				    <delay>0</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Jump_Attack</name>
+				    <frames>7</frames>
+				    <delay>0</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>Land</name>
+				    <frames>13</frames>
+				    <delay>0</delay>
+				</sprite-animation>
+				
 			</animation-list>
 			<frame-timer>0</frame-timer>
 			<direction>1</direction>

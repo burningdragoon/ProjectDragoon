@@ -191,6 +191,11 @@ public class Sprite implements Utility {
 	{
 		if(currentAnimName.equals(name))
 			return;
+		if(!animations.containsKey(name))
+		{
+			System.err.println("Animation Does Not Exist: " + name);
+			return;
+		}
 		currentAnimName = name;
 		currentAnim = animations.get(name);
 		framestart = MyMath.nanoToMilli(System.nanoTime());
@@ -288,8 +293,25 @@ public class Sprite implements Utility {
 	 * Drawing Methods
 	 */
 	
+	public void draw(Graphics g, int xPos, int yPos, boolean forward)
+	{
+		// get the x,y for the current frame
+		int fx = (curFrame % columns) * width;
+		int fy = (curFrame / columns) * height;
+		
+		int desX = xPos;
+		int desY = yPos;
+		
+		spritesheet.draw(g, desX, desY, fx, fy, width, height, forward);
+		
+		g.setColor(Color.red);
+		g.drawString(""+curFrame+"/"+(totalFrames-1), desX, desY);
+		g.setColor(Color.black);
+	}
+	
 	public void draw(Graphics g, int xPos, int yPos) 
 	{
+		/*
 		// get the x,y for the current frame
 		int fx = (curFrame % columns) * width;
 		int fy = (curFrame / columns) * height;
@@ -303,11 +325,18 @@ public class Sprite implements Utility {
 		g.setColor(Color.red);
 		g.drawString(""+curFrame+"/"+(totalFrames-1), desX, desY);
 		g.setColor(Color.black);
+		*/
+		draw(g, xPos, yPos, true);
 	}
 	
 	public void draw(Graphics g, Vector position)
 	{
 		draw(g, (int)position.getX(), (int)position.getY());
+	}
+	
+	public void draw(Graphics g, Vector position, boolean forward)
+	{
+		draw(g, (int)position.getX(), (int)position.getY(), forward);
 	}
 	
 	public void draw(Graphics g, double xPos, double yPos)

@@ -102,6 +102,17 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	/* -- End of Selectors and Mutators -- */
 	
+	/*
+	 * Other Utility methods
+	 */
+	
+	public boolean keyPressed(int key)
+	{
+		return keyHandler.keyPressed(key);
+	}
+	
+	/* -- End of Utility methods -- */
+	
 	public void gameOver()
 	{
 	}

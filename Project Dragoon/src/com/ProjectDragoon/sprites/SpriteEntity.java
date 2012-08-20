@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import com.ProjectDragoon.Entity;
 import com.ProjectDragoon.physics.CollisionMap;
-import com.ProjectDragoon.physics.CollisionPointMap;
+import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
 
 /**
@@ -22,12 +22,18 @@ public class SpriteEntity extends Entity {
 	private Vector velocity;
 	private CollisionMap collisionMap;
 	
+	public boolean forward;
+	
+	public int hotspotX;
+	
 	public SpriteEntity(Sprite sprite, Vector position)
 	{
 		this.sprite = sprite.copy();
 		this.position = new Vector(position);
 		velocity = new Vector();
-		collisionMap = new CollisionMap(position);
+		collisionMap = new CollisionMap(this.position);
+		
+		forward = true;
 	}
 	
 	/*
@@ -67,29 +73,28 @@ public class SpriteEntity extends Entity {
 	
 	/* -- End S&M -- */
 	
+	/**
+	 * resetCollisionMap sets/resets the position of the collision points map to the position of the parent entity
+	 */
+	public void resetCollisionMap()
+	{
+		collisionMap.setPosition(this.position);
+	}
+	
 	public void move()
 	{
-		double px = getXPos();
-		double py = getYPos();
 		double vx = getXVel();
 		double vy = getYVel();
-		
-		double mx = px + vx;
-		double my = py + vy;
-		//position.move(mx, my);
 		position.move(vx,  vy);
-		collisionMap.getPosition().move(vx, vy);
 	}
 	
 	public void moveX(int mx)
 	{
 		position.moveX(mx);
-		collisionMap.getPosition().moveX(mx);
 	}
 	public void moveY(int my)
 	{
 		position.moveY(my);
-		collisionMap.getPosition().moveY(my);
 	}
 	
 	@Override
@@ -110,8 +115,14 @@ public class SpriteEntity extends Entity {
 
 	@Override
 	public void draw(Graphics g) {
-		sprite.draw(g, position);
-		collisionMap.draw(g);
+		sprite.draw(g, position, forward);
+		//collisionMap.draw(g);
+	}
+	
+	public void draw(Graphics g, Camera camera)
+	{
+		sprite.draw(g, (int)position.getX() - camera.x, (int)position.getY() - camera.y, forward);
+		collisionMap.draw(g, camera);
 	}
 
 }

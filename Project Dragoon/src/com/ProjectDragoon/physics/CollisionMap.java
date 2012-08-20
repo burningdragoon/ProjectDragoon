@@ -3,6 +3,7 @@ package com.ProjectDragoon.physics;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
 
 /**
@@ -74,11 +75,7 @@ public class CollisionMap {
 	// Selectors and Mutators
 	
 	public Vector getPosition() { return position; }
-	/**
-	 * Nevermind?: >>The 'position' should always be a reference to an existing vector. This so the CollisionMap will move along with the entity it's attached too.<<
-	 * @param value
-	 */
-	public void setPosition(Vector value) { position = value; }
+	public void setPosition(Vector value) { position.set(value); }
 	
 	public Vector getLeftTop() { return left_top; }
 	public Vector getLeftBottom() { return left_bottom; }
@@ -273,6 +270,55 @@ public class CollisionMap {
 		x = (int)v.getX();
 		y = (int)v.getY();
 		g.drawLine(x, y, x, y);
+	}
+	
+	public void draw(Graphics g, Camera camera)
+	{
+		g.setColor(Color.red);
+		
+		Vector v;
+		int x;
+		int y;
+		
+		v = LEFT_TOP();
+		x = (int)v.getX();
+		y = (int)v.getY();
+		g.drawLine(x - camera.x, y - camera.y, x - camera.x, y - camera.y);
+		
+		v = LEFT_BOTTOM();
+		x = (int)v.getX();
+		y = (int)v.getY();
+		g.drawLine(x - camera.x, y - camera.y, x - camera.x, y - camera.y);
+		
+		v = RIGHT_TOP();
+		x = (int)v.getX();
+		y = (int)v.getY();
+		g.drawLine(x - camera.x, y - camera.y, x - camera.x, y - camera.y);
+		
+		v = RIGHT_BOTTOM();
+		x = (int)v.getX();
+		y = (int)v.getY();
+		g.drawLine(x - camera.x, y - camera.y, x - camera.x, y - camera.y);
+		
+		v = HEAD_LEFT();
+		x = (int)v.getX();
+		y = (int)v.getY();
+		g.drawLine(x - camera.x, y - camera.y, x - camera.x, y - camera.y);
+		
+		v = HEAD_RIGHT();
+		x = (int)v.getX();
+		y = (int)v.getY();
+		g.drawLine(x - camera.x, y - camera.y, x - camera.x, y - camera.y);
+		
+		v = FEET_LEFT();
+		x = (int)v.getX();
+		y = (int)v.getY();
+		g.drawLine(x - camera.x, y - camera.y, x - camera.x, y - camera.y);
+		
+		v = FEET_RIGHT();
+		x = (int)v.getX();
+		y = (int)v.getY();
+		g.drawLine(x - camera.x, y - camera.y, x - camera.x, y - camera.y);
 	}
 	
 }

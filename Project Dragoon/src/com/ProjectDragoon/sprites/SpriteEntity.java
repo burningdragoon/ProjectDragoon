@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 import com.ProjectDragoon.Entity;
 import com.ProjectDragoon.physics.CollisionMap;
+import com.ProjectDragoon.physics.HitBox;
 import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
 
@@ -20,18 +21,16 @@ public class SpriteEntity extends Entity {
 	public Sprite sprite;
 	private Vector position;
 	private Vector velocity;
-	private CollisionMap collisionMap;
+	private HitBox hitBox;
 	
 	public boolean forward;
-	
-	public int hotspotX;
 	
 	public SpriteEntity(Sprite sprite, Vector position)
 	{
 		this.sprite = sprite.copy();
 		this.position = new Vector(position);
 		velocity = new Vector();
-		collisionMap = new CollisionMap(this.position);
+		hitBox = new HitBox(this.position);
 		
 		forward = true;
 	}
@@ -69,17 +68,9 @@ public class SpriteEntity extends Entity {
 	public int getWidth() { return sprite.getWidth(); }
 	public int getHeight() { return sprite.getHeight(); }
 	
-	public CollisionMap getCollisionMap() { return collisionMap; }
+	public HitBox getHitBox() { return hitBox; }
 	
 	/* -- End S&M -- */
-	
-	/**
-	 * resetCollisionMap sets/resets the position of the collision points map to the position of the parent entity
-	 */
-	public void resetCollisionMap()
-	{
-		collisionMap.setPosition(this.position);
-	}
 	
 	public void move()
 	{
@@ -88,14 +79,51 @@ public class SpriteEntity extends Entity {
 		position.move(vx,  vy);
 	}
 	
+	public void moveX()
+	{
+		position.moveX(getXVel());
+	}
+	
 	public void moveX(int mx)
 	{
 		position.moveX(mx);
 	}
+	
+	public void moveY()
+	{
+		position.moveY(getYVel());
+	}
+	
 	public void moveY(int my)
 	{
 		position.moveY(my);
 	}
+	
+	
+	/*
+	 * Sprite collision detection
+	 */
+	
+	/**
+	 * -1: no collision
+	 *  0: collide left
+	 *  1: collide right
+	 *  2: collide top
+	 *  3: collide bottom
+	 * @param entity
+	 * @return
+	 */
+	public int CollideWith(SpriteEntity entity)
+	{
+		int result = -1;
+		
+		//CollisionMap entityMap = entity.getCollisionMap();
+		
+		return result;
+	}
+	
+	/* -- End Sprite Collision Detection -- */
+	
 	
 	@Override
 	public Object copy() {
@@ -113,6 +141,10 @@ public class SpriteEntity extends Entity {
 		sprite.animate();
 	}
 
+	/*
+	 * Drawing methods
+	 */
+	
 	@Override
 	public void draw(Graphics g) {
 		sprite.draw(g, position, forward);
@@ -122,7 +154,9 @@ public class SpriteEntity extends Entity {
 	public void draw(Graphics g, Camera camera)
 	{
 		sprite.draw(g, (int)position.getX() - camera.x, (int)position.getY() - camera.y, forward);
-		collisionMap.draw(g, camera);
+		hitBox.draw(g, camera);
 	}
+	
+	/* -- End Drawing methods -- */
 
 }

@@ -154,11 +154,13 @@ public class TileMapTestPanel extends GamePanel {
 		//guy = new SpriteEntity(sprite, vector);
 		guy = new SpriteEntity(badguy, vector);
 		
+		/*
 		CollisionMap colMap = guy.getCollisionMap();
 		colMap.setLeftPoints(3, 8, guy.getHeight()-5);
 		colMap.setRightPoints(guy.getWidth()-5, 8, guy.getHeight()-5);
 		colMap.setHeadPoints(3, guy.getWidth()-5, 5);
 		colMap.setFeetPoints(3, guy.getWidth()-5, guy.getHeight());
+		*/
 		
 		guyState = ONGROUND;
 		onGround = false;
@@ -265,8 +267,9 @@ public class TileMapTestPanel extends GamePanel {
 		int tileW = map.tileWidth();
 		int tileH = map.tileHeight();
 		
+		/*
 		// Collision detection using collision points
-		CollisionMap colMap = guy.getCollisionMap();		
+		//CollisionMap colMap = guy.getCollisionMap();		
 		
 		// Going right -->
 		boolean collideWall = false;
@@ -371,7 +374,7 @@ public class TileMapTestPanel extends GamePanel {
 				break;
 			}
 		}
-
+		*/
 	} // End of gameUpdate()
 	
 	@Override

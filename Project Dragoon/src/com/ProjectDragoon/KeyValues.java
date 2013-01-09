@@ -12,6 +12,7 @@ public class KeyValues {
 	private KeyValue DOWN;
 	private KeyValue RIGHT;
 	private KeyValue LEFT;
+	private KeyValue RESET;
 	
 	public KeyValues()
 	{
@@ -23,6 +24,8 @@ public class KeyValues {
 		DOWN = new KeyValue("Down", KeyEvent.VK_DOWN);
 		RIGHT = new KeyValue("Right", KeyEvent.VK_RIGHT);
 		LEFT = new KeyValue("Left", KeyEvent.VK_LEFT);
+		
+		RESET = new KeyValue("Reset", KeyEvent.VK_BACK_SPACE);
 	}
 	
 	public int ActionKey()
@@ -79,6 +82,14 @@ public class KeyValues {
 		return LEFT.name;
 	}
 	
+	public int ResetKey()
+	{
+		return RESET.keycode;
+	}
+	public String ResetName()
+	{
+		return RESET.name;
+	}
 	
 /* -------- */
 	class KeyValue

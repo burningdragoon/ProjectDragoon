@@ -114,7 +114,7 @@ public class Map {
 		tiles[row][col].setTile(value); 
 	}
 	
-	public void newTile(int row, int col, int value)
+	public void newTile(int row, int col, int value, int type)
 	{
 		int rowValue = value / tileset.getColumns();
 		int colValue = value % tileset.getColumns();
@@ -139,8 +139,15 @@ public class Map {
 				String[] colValues = rowValues.split(",");
 				for(int colCount = 0; colCount < colValues.length; colCount++)
 				{
-					int value = Integer.parseInt(colValues[colCount]);
-					this.newTile(rowCount, colCount, value);
+					//int value = Integer.parseInt(colValues[colCount]);
+					//this.newTile(rowCount, colCount, value, 0);
+					String[] colValue = colValues[colCount].split("/");
+					int value = Integer.parseInt(colValue[0]);
+					int type = 0;
+					if(colValue.length > 1)	
+						type = Integer.parseInt(colValue[1]);
+					this.newTile(rowCount, colCount, value, type);
+					
 				}
 				rowCount++;
 			}
@@ -216,5 +223,16 @@ public class Map {
 			g.drawLine(x, 0, x, height);
 		for(int y = 0; y < height; y += dy)
 			g.drawLine(0, y, width, y);
+	}
+	
+	public void drawGrid(Graphics g, Camera camera)
+	{
+		g.setColor(Color.white);
+		int dx = width / columns;
+		int dy = height / rows;
+		for(int x = 0-camera.x; x < width-camera.x; x += dx)
+			g.drawLine(x, 0, x, height);
+		for(int y = 0-camera.y; y < height-camera.y; y += dy)
+			g.drawLine(0, y+camera.y, width, y+camera.y);
 	}
 }

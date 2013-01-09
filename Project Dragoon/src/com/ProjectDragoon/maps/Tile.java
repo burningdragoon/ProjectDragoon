@@ -30,11 +30,12 @@ public class Tile {
 	
 	public Tile(TileSet tiles, int tsRow, int tsCol)
 	{
-		this(tiles, tsRow, tsCol, 0, 0);
+		this(tiles, tsRow, tsCol, 0, 0, 0);
 	}
 	
 	public Tile(TileSet tiles, int tsRow, int tsCol, int mapRow, int mapCol)
 	{
+		/*
 		tileset = tiles;
 		tilesetRow = tsRow;
 		tilesetColumn = tsCol;
@@ -45,6 +46,22 @@ public class Tile {
 		this.mapRow = mapRow;
 		this.mapColumn = mapCol;
 		tileType = 0;
+		*/
+		this(tiles, tsRow, tsCol, mapRow, mapCol, 0);
+	}
+	
+	public Tile(TileSet tiles, int tsRow, int tsCol, int mapRow, int mapCol, int type)
+	{
+		tileset = tiles;
+		tilesetRow = tsRow;
+		tilesetColumn = tsCol;
+		if(tsRow < 0 || tsCol < 0)
+			hasTile = false;
+		else
+			hasTile = true;
+		this.mapRow = mapRow;
+		this.mapColumn = mapCol;
+		tileType = type;
 	}
 	
 	// Selectors & Mutators

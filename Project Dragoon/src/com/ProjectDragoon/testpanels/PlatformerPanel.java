@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 
+import com.ProjectDragoon.Entity;
 import com.ProjectDragoon.Game;
 import com.ProjectDragoon.GamePanel;
 import com.ProjectDragoon.KeyValues;
@@ -12,6 +13,7 @@ import com.ProjectDragoon.maps.Map;
 import com.ProjectDragoon.maps.Tile;
 import com.ProjectDragoon.maps.TileSet;
 import com.ProjectDragoon.physics.CollisionMap;
+import com.ProjectDragoon.physics.HitBox;
 import com.ProjectDragoon.sprites.Sprite;
 import com.ProjectDragoon.sprites.SpriteEntity;
 import com.ProjectDragoon.util.Camera;
@@ -40,6 +42,7 @@ public class PlatformerPanel extends GamePanel {
 	int playerState;
 	
 	SpriteEntity dragon;
+	SpriteEntity badguy;
 	
 	public PlatformerPanel(Game game, int width, int height, long period) {
 		super(game, width, height, period);
@@ -82,6 +85,249 @@ public class PlatformerPanel extends GamePanel {
 			camera.y += playerCenterOffsetY;
 		*/
 	}
+	
+	/**
+	 * Performs any collision detection
+	 */
+	public void collisionDetection()
+	{
+		// Collision Detection:
+		//TODO : Collision Detection: Out of Bounds checking.
+		//TODO : Collision Detection between entities.
+
+		/* -- Player vs Map collisions */
+		HitBox hitbox = player.getHitBox();
+		Vector curPos = hitbox.getPosition();
+		int curXLeft = (int)hitbox.TopLeft().getX();
+		int curXRight = (int)hitbox.TopRight().getX();
+		int curYTop = (int)hitbox.TopLeft().getY();
+		int curYBottom = (int)hitbox.BottomLeft().getY();
+		
+		Vector destPos = new Vector(curPos);
+		destPos.Add(player.getVelocity());
+		int destXLeft = (int)(curXLeft + player.getXVel());
+		int destXRight = (int)(curXRight + player.getXVel());
+		int destYTop = (int)(curYTop + player.getYVel());
+		int destYBottom = (int)(curYBottom + player.getYVel());
+		
+		Tile curTileLeft = null;
+		Tile curTileRight = null;
+		Tile curTileTop = null;
+		Tile curTileBottom = null;
+		
+		Tile destTileLeft = null;
+		Tile destTileRight = null;
+		Tile destTileTop = null;
+		Tile destTileBottom = null;
+		
+		// check if the player's current position is colliding with the environment
+		// if so, move it to the top-left most free tile
+		
+		// check if player's horizontal movement will collide with the environment
+		// if yes, move as far as possible in the current direction.
+		// if no, move the player the full distance.
+		// if moving Right (-->)
+		
+		if(player.getXVel() > 0)
+		{	
+			int curColumn = curXRight / map.tileWidth();
+			destTileTop = map.getTile(curYTop / map.tileHeight(), destXRight / map.tileWidth());
+			destTileBottom = map.getTile(curYBottom / map.tileHeight(), destXRight / map.tileWidth());
+			
+			if(!(destTileTop == null & destTileBottom == null))
+			{
+				if(destTileTop == null)
+				{
+					destTileTop = map.getFirstTileInColumn(curXRight / map.tileWidth());
+				}
+				else if(destTileBottom == null)
+				{
+					destTileBottom = map.getLastTileInColumn(curXRight / map.tileWidth());
+				}
+				
+				for(int row = destTileTop.getMapRow(); row <= destTileBottom.getMapRow(); row++)
+				{
+					boolean collide = false;
+					//System.out.println("HERPA");
+					for(int col = curColumn; col <= destTileTop.getMapColumn(); col++)
+					{
+						Tile tile = map.getTile(row, col);
+						if(tile.hasTile())
+						{
+							// COLLISION!
+							// determine how much space before collision:
+							// this is equal to the difference between the far right of the current position, and the far left of the destination tile.
+							int difx = (tile.getMapColumn() * map.tileWidth()) - curXRight - 1;
+							player.setXVel(difx);
+							collide = true;
+							break;
+						}
+						if(collide)
+						{
+							break;
+						}
+					}
+					/*
+					Tile tile = map.getTile(row, destTileTop.getMapColumn());
+					if(tile.hasTile())
+					{
+						// COLLISION!
+						// determine how much space before collision:
+						// this is equal to the difference between the far right of the current position, and the far left of the destination tile.
+						int difx = (tile.getMapColumn() * map.tileWidth()) - curXRight - 1;
+						player.setXVel(difx);
+						break;
+					}
+					*/
+				}
+			}
+			
+		}
+		// if moving Left (<--)
+		else if(player.getXVel() < 0)
+		{
+			int curColumn = curXLeft / map.tileWidth();
+			destTileTop = map.getTile(curYTop / map.tileHeight(), destXLeft / map.tileWidth());
+			destTileBottom = map.getTile(curYBottom / map.tileHeight(), destXLeft / map.tileWidth());
+			
+			if(!(destTileTop == null && destTileBottom == null))
+			{
+				if(destTileTop == null)
+				{
+					destTileTop = map.getFirstTileInColumn(curXLeft / map.tileWidth());
+				}
+				else if(destTileBottom == null)
+				{
+					destTileBottom = map.getLastTileInColumn(curXLeft / map.tileWidth());
+				}
+				
+				for(int row = destTileTop.getMapRow(); row <= destTileBottom.getMapRow(); row++)
+				{
+					boolean collide = false;
+					for(int col = curColumn; col >= destTileTop.getMapColumn(); col--)
+					{
+						Tile tile = map.getTile(row, col);
+						if(tile.hasTile())
+						{
+							//Collision!
+							int difx = (tile.getMapColumn() * map.tileWidth()) + map.tileWidth() - curXLeft + 1;
+							player.setXVel(difx);
+							collide = true;
+							break;
+						}
+						if(collide)
+						{
+							break;
+						}
+					}
+				}
+			}
+		}	
+		
+		// check if the player's vertical movement will collide with the environment.
+		// if yes, move as far as possible
+		// if no, move the full distance
+		boolean collideGround = false;
+		
+		if(player.getYVel() > 0)
+		{
+			int curRow = curYBottom / map.tileHeight();
+			destTileLeft = map.getTile(destYBottom / map.tileHeight(), curXLeft / map.tileWidth());
+			destTileRight = map.getTile(destYBottom / map.tileHeight(), curXRight / map.tileWidth());
+			
+			if(!(destTileLeft == null && destTileRight == null))
+			{
+				if(destTileLeft == null)
+				{
+					destTileLeft = map.getLastTileInRow(curYBottom / map.tileHeight());
+				}
+				else if(destTileRight == null)
+				{
+					destTileRight = map.getLastTileInRow(curYBottom / map.tileHeight());
+				}
+				
+				for(int column = destTileLeft.getMapColumn(); column <= destTileRight.getMapColumn(); column++)
+				{
+					boolean collide = false;
+					for(int row = curRow; row <= destTileLeft.getMapRow(); row++)
+					{
+						Tile tile = map.getTile(row, column);
+						if(tile.hasTile())
+						{
+							int dify = (tile.getMapRow() * map.tileHeight()) - curYBottom - 1;
+							player.setYVel(dify);
+							collideGround = true;
+							collide = true;
+							break;
+						}
+						if(collide)
+						{
+							break;
+						}
+					}
+				}
+			}
+		}
+		else if(player.getYVel() < 0)
+		{
+			int curRow = curYTop / map.tileHeight();
+			destTileLeft = map.getTile(destYTop / map.tileHeight(), curXLeft / map.tileWidth());
+			destTileRight = map.getTile(destYTop / map.tileHeight(), curXRight / map.tileWidth());
+			
+			if(!(destTileLeft == null && destTileRight == null))
+			{
+				if(destTileLeft == null)
+				{
+					destTileLeft = map.getFirstTileInRow(curYTop / map.tileHeight());
+				}
+				else if(destTileRight == null)
+				{
+					destTileRight = map.getLastTileInRow(curYTop / map.tileHeight());
+				}
+			
+				for(int column = destTileLeft.getMapColumn(); column <= destTileRight.getMapColumn(); column++)
+				{
+					boolean collide = false;
+					for(int row = curRow; row >= destTileLeft.getMapRow(); row--)
+					{
+						Tile tile = map.getTile(row, column);
+						if(tile.hasTile())
+						{
+							int dify = (tile.getMapRow() * map.tileHeight()) + map.tileHeight() - curYTop + 1;
+							player.setYVel(dify);
+							if(playerState == JUMPING)
+								playerState = FALLING;
+							break;
+						}
+					}
+				}
+			}
+		}
+		if(collideGround)
+		{
+			playerState = ONGROUND;
+		}
+		else
+		{
+			if(playerState != JUMPING)
+			{
+				playerState = FALLING;
+			}
+		}
+		
+		/* -- Player vs. Other -- */
+		// Testing Version
+		if(entityCollision(player, badguy))
+		{
+			System.out.println("Yo man, get out of my way!");
+		}
+		
+	}
+	
+	public boolean entityCollision(Entity e1, Entity e2)
+	{
+		return false;
+	}
 	/* -- */
 	
 	/*
@@ -104,7 +350,7 @@ public class PlatformerPanel extends GamePanel {
 		TileSet tileset = new TileSet(10,10,32,32);
 		tileset.loadTiles("/images/test_tiles.png");
 		map = new Map(tileset, 20,50);
-		map.readMap("res/maps/testmap3.txt");
+		map.readMap("res/maps/testmap5.txt");
 		
 		// Set up camera.
 		camera = new Camera(this.getScreenWidth(), this.getScreenHeight());
@@ -116,37 +362,43 @@ public class PlatformerPanel extends GamePanel {
 		sprite.setCurrentAnimation("Rest");
 		player = new SpriteEntity(sprite, new Vector());
 		playerState = ONGROUND;
-		// init collision points
-		CollisionMap colmap = player.getCollisionMap();
-		int colLeftX = 25;
-		int colRightX = 38;
-		int colTopY = 24;
-		int colBotY = 49;
-		int colHeadY = 20;
-		int colFeetY = 53;
-		colmap.setRightPoints(colRightX, colTopY, colBotY);
-		colmap.setLeftPoints(colLeftX, colTopY, colBotY);
-		colmap.setHeadPoints(colLeftX, colRightX, colHeadY);
-		colmap.setFeetPoints(colLeftX, colRightX, colFeetY);
+		
+		HitBox hitbox = player.getHitBox();
+		hitbox.setPosition(25, 20);
+		hitbox.setWidth(13);
+		hitbox.setHeight(33);
+		
+		//test badguy thingy
+		badguy = new SpriteEntity(sprite, new Vector());
+		//CollisionMap colmap2 = badguy.getCollisionMap();
+		//colmap2.setAllPoints(colmap);
+		badguy.setPosition(100, 350);
 		
 		//test thingy
 		sprite = DataSaver.LoadSprite("res/sprites/dragoon.sprite");
 		sprite.setCurrentAnimation("Walk_Down");
 		dragon = new SpriteEntity(sprite, new Vector());
 		dragon.setPosition(100, 100);
+
+		
 	}
 	
 	@Override
 	public void gameUpdate() 
 	{		
+		// Reset everything
+		if(keyPressed(keys.ResetKey()))
+			gameInit();
+		
 		if(keyPressed(keys.RightKey()))
 		{
-			player.setXVel(2);
+			player.setXVel(40);
 			player.forward = false;
 		}
 		else if(keyPressed(keys.LeftKey()))
 		{
-			player.setXVel(-1);
+			//player.setXVel(-1);
+			player.setXVel(-40);
 			player.forward = true;
 		}
 		else
@@ -154,17 +406,32 @@ public class PlatformerPanel extends GamePanel {
 			player.setXVel(0);
 		}
 		
+		/*
+		if(keyPressed(keys.UpKey()))
+		{
+			player.setYVel(-2);
+		}
+		else if(keyPressed(keys.DownKey()))
+		{
+			player.setYVel(2);
+		}
+		else
+		{
+			player.setYVel(0);
+		}
+		//*/
 		
+		//*
 		if(playerState == FALLING)
 		{
-			player.setYVel(3);
+			player.setYVel(40);
 			//player.sprite.setCurrentAnimation("");
 		}
 		else if(playerState == ONGROUND)
 		{
 			if(keyPressed(keys.ActionKey()))
 			{
-				player.setYVel(-2);
+				player.setYVel(-40);
 				playerState = JUMPING;
 				player.sprite.setCurrentAnimation("Jump");
 			}
@@ -179,186 +446,16 @@ public class PlatformerPanel extends GamePanel {
 			if(!keyPressed(keys.ActionKey()))
 				playerState = FALLING;
 		}
+		//*/
+		
+		
+		
+		collisionDetection();
 		
 		player.update();
 		player.animate();
 		dragon.animate();
-		
-		// Collision Detection:
-		//TODO : Collision Detection: Out of Bounds checking.
-		CollisionMap colMap = player.getCollisionMap();
-		boolean collideWall = false;
-		// Going right -->
-		if(player.getXVel() > 0)
-		{
-			int xRight = (int)colMap.RIGHT_TOP().getX();
-			int yRightTop = (int)colMap.RIGHT_TOP().getY();
-			int yRightBot = (int)colMap.RIGHT_BOTTOM().getY();
-			
-			Tile tileTop = map.getTile(yRightTop / map.tileHeight(), xRight / map.tileWidth());
-			Tile tileBot = map.getTile(yRightBot / map.tileHeight(), xRight / map.tileWidth());
-			
-			if(tileTop == null && tileBot == null)
-			{
-				// do nothing
-			}
-			else
-			{
-				if(tileTop == null)
-				{
-					//tileTop = map.getTile(0, xRight / map.tileWidth());
-					tileTop = map.getFirstTileInColumn(xRight / map.tileWidth());
-				}
-				else if(tileBot == null)
-				{
-					//tileBot = map.getTile(map.getRows()-1, xRight / map.tileWidth());
-					tileBot = map.getLastTileInColumn(xRight / map.tileWidth());
-				}
-			
-				for(int row = tileTop.getMapRow(); row <= tileBot.getMapRow(); row++)
-				{
-					Tile tile = map.getTile(row, tileTop.getMapColumn());
-					if(tile.hasTile())
-					{
-						int mx = ((xRight / map.tileWidth()) * map.tileWidth()) - xRight - 1;
-						player.moveX(mx);
-						collideWall = true;
-						//after collision is handled, there is no reason to keeep checking.
-						break;
-					}
-				}
-			}
-		}
-		// Going left;
-		else if(player.getXVel() < 0)
-		{
-			int xLeft = (int)colMap.LEFT_TOP().getX();
-			int yLeftTop = (int)colMap.LEFT_TOP().getY();
-			int yLeftBot = (int)colMap.LEFT_BOTTOM().getY();
-			Tile tileTop = map.getTile(yLeftTop / map.tileHeight(), xLeft / map.tileWidth());
-			Tile tileBot = map.getTile(yLeftBot / map.tileHeight(), xLeft / map.tileWidth());
-			
-			if(tileTop == null && tileBot == null)
-			{
-				// do nothing
-			}
-			else
-			{
-				if(tileTop == null)
-				{
-					//tileTop = map.getTile(0, xLeft / map.tileWidth());
-					tileTop = map.getFirstTileInColumn(xLeft / map.tileHeight());
-				}
-				else if(tileBot == null)
-				{
-					//tileBot = map.getTile(map.getRows()-1, xLeft / map.tileWidth());
-					tileBot = map.getLastTileInColumn(xLeft / map.tileWidth());
-					
-				}
-				
-				for(int row = tileTop.getMapRow(); row <= tileBot.getMapRow(); row++)
-				{
-					Tile tile = map.getTile(row, tileTop.getMapColumn());
-					if(tile.hasTile())
-					{
-						int mx = (((xLeft / map.tileWidth()) * map.tileWidth()) + map.tileWidth()) - xLeft;
-						player.moveX(mx);
-						collideWall = true;
-						break;
-					}
-				}
-			}
-		}
-		
-		//falling / on ground
-		Tile tileLeft;
-		Tile tileRight;
-		
-		int xFeetLeft = (int)colMap.FEET_LEFT().getX();
-		int xFeetRight = (int)colMap.FEET_RIGHT().getX();
-		int yFeet = (int)colMap.FEET_LEFT().getY();
-		tileLeft = map.getTile(yFeet / map.tileHeight(), xFeetLeft / map.tileWidth());
-		tileRight = map.getTile(yFeet / map.tileHeight(), xFeetRight / map.tileWidth());
-		boolean collideGround = false;
-		
-		if(tileLeft == null && tileRight == null)
-		{
-			
-		}
-		else
-		{
-			if(tileLeft == null)
-			{
-				//tileLeft = map.getTile(yFeet / map.tileHeight(), 0);
-				tileLeft = map.getFirstTileInRow(yFeet / map.tileHeight());
-			}
-			else if(tileRight == null)
-			{
-				//tileRight = map.getTile(yFeet / map.tileHeight(), map.getColumns()-1);
-				tileRight = map.getLastTileInRow(yFeet / map.getHeight());
-			}
-			
-			for(int column = tileLeft.getMapColumn(); column <= tileRight.getMapColumn(); column++)
-			{
-				Tile tile = map.getTile(tileLeft.getMapRow(), column);
-				if(tile.hasTile())
-				{
-					int my = ((yFeet / map.tileHeight()) * map.tileHeight()) - yFeet;
-					player.moveY(my);
-					collideGround = true;
-					break;
-				}
-			}
-		}	
-			if(collideGround)
-			{
-				playerState = ONGROUND;
-			}
-			else
-			{
-				if(playerState != JUMPING)
-				{
-					playerState = FALLING;
-				}
-			}
-		
-		// Upper collision
-		int xHeadLeft = (int)colMap.HEAD_LEFT().getX();
-		int xHeadRight = (int)colMap.HEAD_RIGHT().getX();
-		int yHead = (int)colMap.HEAD_LEFT().getY();
-		tileLeft = map.getTile(yHead / map.tileHeight(), xHeadLeft / map.tileWidth());
-		tileRight = map.getTile(yHead / map.tileHeight(), xHeadRight / map.tileWidth());
-		
-		if(tileLeft == null && tileRight == null)
-		{
-			// do nothing
-		}
-		else
-		{
-			if(tileLeft == null)
-			{
-				//tileLeft = map.getTile(yHead / map.tileHeight(), 0);
-				tileLeft = map.getFirstTileInRow(yHead / map.tileHeight());
-			}
-			else if (tileRight == null)
-			{
-				//tileRight = map.getTile(yHead / map.tileHeight(), map.getColumns()-1);
-				tileRight = map.getLastTileInRow(yHead / map.tileHeight());
-			}
-			
-			for(int column = tileLeft.getMapColumn(); column <= tileRight.getMapColumn(); column++)
-			{
-				Tile tile = map.getTile(tileLeft.getMapRow(), column);
-				if(tile.hasTile())
-				{
-					int my = (((yHead / map.tileHeight()) * map.tileHeight()) + map.tileHeight()) - yHead;
-					player.moveY(my);
-					if(playerState == JUMPING)
-						playerState = FALLING;
-					break;
-				}
-			}
-		}
+		badguy.animate();
 		
 		//update camera position.
 		adjustCamera();
@@ -373,10 +470,13 @@ public class PlatformerPanel extends GamePanel {
 		dbg.drawImage(background.getImage(), 0, 0, 800, 640, null);
 		
 		map.draw(dbg, camera);
-		
-		player.draw(dbg, camera);
+		map.drawGrid(dbg, camera);
 		
 		dragon.draw(dbg, camera);
+		
+		badguy.draw(dbg, camera);
+		
+		player.draw(dbg, camera);
 		
 		// display fps
 		dbg.setColor(Color.white);

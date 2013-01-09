@@ -38,5 +38,4 @@ public class DragonPanel extends GamePanel {
 	
 	/* -- End life cycle methods -- */
 	
-	
 }

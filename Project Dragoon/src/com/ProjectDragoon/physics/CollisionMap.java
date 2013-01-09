@@ -130,6 +130,18 @@ public class CollisionMap {
 		feet_right = new Vector(rightX, y, 0);
 	}
 	
+	public void setAllPoints(CollisionMap map)
+	{
+		left_top.set(map.getLeftTop());
+		left_bottom.set(map.getLeftBottom());
+		right_top.set(map.getRightTop());
+		right_top.set(map.getRightBottom());
+		head_left.set(map.getHeadLeft());
+		head_right.set(map.getHeadRight());
+		feet_left.set(map.getFeetLeft());
+		feet_right.set(map.getFeetRight());
+	}
+	
 	// --- End S&M ---
 	
 	// Other methods...
@@ -222,6 +234,11 @@ public class CollisionMap {
 		return v;
 	}
 	
+	/*
+	 * End of Other methods
+	 */
+	
+	// -- Drawing Methds --
 	
 	public void draw(Graphics g)
 	{
@@ -274,7 +291,7 @@ public class CollisionMap {
 	
 	public void draw(Graphics g, Camera camera)
 	{
-		g.setColor(Color.red);
+		g.setColor(Color.green);
 		
 		Vector v;
 		int x;
@@ -320,5 +337,7 @@ public class CollisionMap {
 		y = (int)v.getY();
 		g.drawLine(x - camera.x, y - camera.y, x - camera.x, y - camera.y);
 	}
+	
+	// -- End of Drawing methods --
 	
 }

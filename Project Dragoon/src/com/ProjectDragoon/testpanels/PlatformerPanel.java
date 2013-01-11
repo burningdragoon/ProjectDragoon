@@ -126,8 +126,10 @@ public class PlatformerPanel extends GamePanel {
 		// check if player's horizontal movement will collide with the environment
 		// if yes, move as far as possible in the current direction.
 		// if no, move the player the full distance.
-		// if moving Right (-->)
+		// Current process is a double for-loop that covers all possible tiles covered in a single move. 
+		// It's a very dirty O(n^2), but considering it'd be unlikely to check more than a handful of tiles, it's not a big deal. 
 		
+		// if moving Right (-->)		
 		if(player.getXVel() > 0)
 		{	
 			int curColumn = curXRight / map.tileWidth();
@@ -252,7 +254,7 @@ public class PlatformerPanel extends GamePanel {
 					for(int row = curRow; row <= destTileLeft.getMapRow(); row++)
 					{
 						Tile tile = map.getTile(row, column);
-						if(tile.hasTile())
+						if(tile != null && tile.hasTile())
 						{
 							int dify = (tile.getMapRow() * map.tileHeight()) - curYBottom - 1;
 							player.setYVel(dify);

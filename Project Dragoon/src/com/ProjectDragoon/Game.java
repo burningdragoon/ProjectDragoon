@@ -38,8 +38,9 @@ public class Game extends JFrame implements WindowListener {
 	//private WindowPanel gamePanel;
 	//private TileMapTestPanel gamePanel;
 	//private ScrollingTilesPanel gamePanel;
-	private PlatformerPanel gamePanel;
+	//private PlatformerPanel gamePanel;
 	//private TopDownPanel gamePanel;
+	private GamePanel gamePanel;
 	
 	public int i;
 	

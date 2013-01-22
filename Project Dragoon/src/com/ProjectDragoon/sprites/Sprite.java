@@ -157,7 +157,7 @@ public class Sprite implements Utility {
 	
 	public boolean reloadImage()
 	{
-		System.out.println(spritesheetFile);
+		//System.out.println(spritesheetFile);
 		spritesheet = new Texture();
 		return spritesheet.loadImage(spritesheetFile);
 	}
@@ -184,11 +184,12 @@ public class Sprite implements Utility {
 	
 	public void AddAnimations(String name, SpriteAnimation anim)
 	{
-		animations.put(name,  anim);
+		animations.put(name.toLowerCase(),  anim);
 	}
 	
 	public void setCurrentAnimation(String name)
 	{
+		name = name.toLowerCase();
 		if(currentAnimName.equals(name))
 			return;
 		if(!animations.containsKey(name))
@@ -379,6 +380,12 @@ public class Sprite implements Utility {
 		s.animDir = animDir;
 		
 		return s;
+	}
+	
+	@Override
+	public void restore() 
+	{
+		reloadImage();
 	}
 
 	/* -- End Utility -- */

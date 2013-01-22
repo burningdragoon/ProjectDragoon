@@ -111,6 +111,11 @@ public class GamePanel extends JPanel implements Runnable {
 		return keyHandler.keyPressed(key);
 	}
 	
+	public boolean keyReleased(int key)
+	{
+		return false;
+	}
+	
 	/* -- End of Utility methods -- */
 	
 	public void gameOver()

@@ -12,12 +12,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.ProjectDragoon.physics.HitBox;
 import com.ProjectDragoon.sprites.Sprite;
 import com.ProjectDragoon.sprites.SpriteAnimation;
+import com.ProjectDragoon.sprites.SpriteEntity;
+import com.ProjectDragoon.util.Vector;
 
 public class ResourceManager {
 	
 	private final String SPRITE_PATH = "res/sprites/";
+	private final String ENTITY_PATH = "res/entities/";
 	
 	private DocumentBuilderFactory dbFactory;
 	private DocumentBuilder dBuilder;
@@ -49,7 +53,7 @@ public class ResourceManager {
 		return doc;
 	}
 	
-	public void createSprites(String filename)
+	public Sprite createSprites(String filename, boolean save)
 	{
 		Document xml = getXMLDoc(filename);
 		
@@ -154,8 +158,98 @@ public class ResourceManager {
 			System.out.println("Sprite Name: " + spriteName);
 			System.out.println(sprite.toString());
 			
-			DataSaver.Save(sprite, SPRITE_PATH, spriteName);
+			if(save)
+				DataSaver.Save(sprite, SPRITE_PATH, spriteName);
+			else
+				return sprite;
 		}
+		return null;
+	}
+	
+	public SpriteEntity createSpriteEntities(String filename, boolean save)
+	{
+		Document xml = getXMLDoc(filename);
+		
+		NodeList resList = xml.getElementsByTagName("sprite-entity");
+		for(int res = 0; res < resList.getLength(); res++)
+		{
+			System.out.println("New Sprite-Entity.");
+			SpriteEntity entity;
+			Sprite sprite;
+			
+			Node entityNode = resList.item(res);
+			Element entityElem = (Element)entityNode;
+			
+			//sprite
+			String spritefile = entityElem.getElementsByTagName("sprite").item(0).getTextContent();
+			String spritefiletype = entityElem.getElementsByTagName("sprite").item(0).getAttributes().getNamedItem("type").getTextContent();
+			if(spritefiletype.equals("xml"))
+				sprite = this.createSprites(SPRITE_PATH + "xml\\" + spritefile, false);
+			else if(spritefiletype.equals("sprite"))
+				sprite = DataSaver.LoadSprite(SPRITE_PATH + spritefile);
+			else
+				sprite = new Sprite();
+			
+			entity = new SpriteEntity(sprite);
+			
+			//id
+			String id = entityElem.getElementsByTagName("id").item(0).getTextContent();
+			
+			//name
+			String name = entityElem.getElementsByTagName("name").item(0).getTextContent();
+			entity.setName(name);
+			
+			//object type
+			String type = entityElem.getElementsByTagName("object-type").item(0).getTextContent();
+			
+			//lifetime
+			String lifetime = entityElem.getElementsByTagName("lifetime").item(0).getTextContent();
+			try{
+				entity.setLifetimer(Integer.parseInt(lifetime));
+			}
+			catch(Exception e)
+			{
+				entity.setLifetimer(0);
+			}
+			
+			
+			//hitboxes
+			NodeList aabbList = ((Element)(entityElem.getElementsByTagName("hitboxes").item(0))).getElementsByTagName("hitbox");
+			for(int aabb = 0; aabb < aabbList.getLength(); aabb++)
+			{
+				Element aabbElem = (Element)aabbList.item(aabb);
+				
+				String aabbName = aabbElem.getElementsByTagName("name").item(0).getTextContent();
+				
+				String xStr = aabbElem.getElementsByTagName("x").item(0).getTextContent();
+				String yStr = aabbElem.getElementsByTagName("y").item(0).getTextContent();
+				String zStr = aabbElem.getElementsByTagName("z").item(0).getTextContent();
+				
+				String wStr = aabbElem.getElementsByTagName("width").item(0).getTextContent();
+				String hStr = aabbElem.getElementsByTagName("height").item(0).getTextContent();
+				
+				int xPos = Integer.parseInt(xStr);
+				int yPos = Integer.parseInt(yStr);
+				int zPos = Integer.parseInt(zStr);
+				Vector boxPos = new Vector(xPos, yPos, zPos);
+				
+				int width = Integer.parseInt(wStr);
+				int height = Integer.parseInt(hStr);
+				
+				entity.addNewHitBox(aabbName, boxPos, width, height);
+			}
+			
+			
+			// print
+			//System.out.printf("id: %s\nname: %s\ntype: %s\nlifetime: %s\nsprite file: %s\nsprite filetype: %s\n", id,name,type,lifetime,spritefile,spritefiletype);
+			
+			if(save)
+				DataSaver.Save(entity, ENTITY_PATH, name);
+			else
+				return entity;
+		}
+		
+		return null;
 	}
 
 }

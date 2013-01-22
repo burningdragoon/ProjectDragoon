@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <sprite-entity>
+        <id>0</id>
+        <name>kain</name>
+        <object-type>0</object-type>
+        <lifetime>0</lifetime>
+        <sprite type="xml">kain.xml</sprite>
+        <hitboxes>
+            <hitbox>
+                <name>main</name>
+                <x>25</x>
+                <y>20</y>
+                <z>0</z>
+                <width>13</width>
+                <height>33</height>
+            </hitbox>
+        </hitboxes>
+    </sprite-entity>
+</resources>

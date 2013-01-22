@@ -179,6 +179,12 @@ public class Texture implements Utility{
 		this.draw(t.getImage().getGraphics());
 		return t;
 	}
+
+	@Override
+	public void restore() {
+		// TODO Auto-generated method stub
+		// nothing to see here.
+	}
 	
 	/* -- End Utility -- */
 

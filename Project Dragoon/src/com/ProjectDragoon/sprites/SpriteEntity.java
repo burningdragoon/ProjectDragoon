@@ -1,9 +1,9 @@
 package com.ProjectDragoon.sprites;
 
 import java.awt.Graphics;
+import java.util.HashMap;
 
 import com.ProjectDragoon.Entity;
-import com.ProjectDragoon.physics.CollisionMap;
 import com.ProjectDragoon.physics.HitBox;
 import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
@@ -25,14 +25,34 @@ public class SpriteEntity extends Entity {
 	
 	public boolean forward;
 	
+	private HashMap<String, HitBox> hitboxes;
+	
+	private SpriteEntity()
+	{
+		super();
+		position = new Vector();
+		velocity = new Vector();
+		hitBox = null;
+		forward = true;
+		hitboxes = new HashMap<String, HitBox>();
+	}
+	
 	public SpriteEntity(Sprite sprite, Vector position)
 	{
+		super();
 		this.sprite = sprite.copy();
 		this.position = new Vector(position);
 		velocity = new Vector();
-		hitBox = new HitBox(this.position);
+		hitBox = null;
 		
 		forward = true;
+		
+		hitboxes = new HashMap<String, HitBox>();
+	}
+	
+	public SpriteEntity(Sprite sprite)
+	{
+		this(sprite, new Vector());
 	}
 	
 	/*
@@ -68,9 +88,62 @@ public class SpriteEntity extends Entity {
 	public int getWidth() { return sprite.getWidth(); }
 	public int getHeight() { return sprite.getHeight(); }
 	
+	public Sprite getSprite() { return sprite; }
+	
 	public HitBox getHitBox() { return hitBox; }
 	
 	/* -- End S&M -- */
+	
+	/*
+	 * HitBox Methods
+	 */
+	
+	public void addHitBox(String name, HitBox hb)
+	{
+		hitboxes.put(name, hb);
+	}
+	
+	/**
+	 * Adds a new HitBox to the list. 
+	 * If there is currently no main HitBox (held in the 'hitBox' variable), than the new HitBox will be set to it.
+	 * @param name
+	 * @param pos
+	 * @param width
+	 * @param height
+	 */
+	public void addNewHitBox(String name, Vector pos, int width, int height)
+	{
+		HitBox hb = new HitBox(this.position, pos, width, height);
+		addHitBox(name, hb);
+		
+		if(hitBox == null)
+		{
+			setMainHitBox(name);
+		}
+	}
+	
+	public HitBox getHitBox(String name)
+	{
+		HitBox hb = null;
+		if(hitboxes.containsKey(name))
+			hb = hitboxes.get(name);
+		return hb;
+	}
+	
+	public void setMainHitBox(String name)
+	{
+		if(hitboxes.containsKey(name))
+		{
+			hitBox = hitboxes.get(name);
+		}
+		else
+		{
+			System.err.println("There is no HitBox stored under that name. No changes made.");
+		}
+	}
+	
+	/* -- -- */
+	
 	
 	public void move()
 	{
@@ -124,12 +197,50 @@ public class SpriteEntity extends Entity {
 	
 	/* -- End Sprite Collision Detection -- */
 	
+	/*
+	 * Utility Interface Methods
+	 */
 	
 	@Override
-	public Object copy() {
-		// TODO Auto-generated method stub
-		return null;
+	public SpriteEntity copy() {
+		
+		SpriteEntity entity = new SpriteEntity();
+		
+		// Entity fields
+		entity.setID(-1);
+		entity.setName("");
+		entity.setAlive(this.isAlive());
+		entity.setVisible(this.isVisible());
+		entity.setObjectType(0);
+		entity.setLifetimer(this.getLifetime());
+		
+		// SpriteEntity fields
+		entity.sprite = this.sprite.copy();
+		entity.position = new Vector(this.position);
+		entity.velocity = new Vector(this.velocity);
+		entity.forward = this.forward;
+		
+		entity.hitBox = new HitBox(entity.getPosition(), this.hitBox.getPosition(), this.hitBox.getWidth(), this.hitBox.getHeight());
+		
+		for(String key : hitboxes.keySet())
+		{
+			HitBox hb = hitboxes.get(key);
+			HitBox newHb = new HitBox(entity.getPosition(), hb.getPosition(), hb.getWidth(), hb.getHeight());
+			entity.addHitBox(key, newHb);
+		}
+		
+		
+		return entity;
 	}
+	
+	@Override
+	public void restore()
+	{
+		super.restore();
+		sprite.restore();
+	}
+	
+	/* -- End of Utility Interface -- */
 
 	@Override
 	public void update() {
@@ -154,7 +265,8 @@ public class SpriteEntity extends Entity {
 	public void draw(Graphics g, Camera camera)
 	{
 		sprite.draw(g, (int)position.getX() - camera.x, (int)position.getY() - camera.y, forward);
-		hitBox.draw(g, camera);
+		if(hitBox != null)
+			hitBox.draw(g, camera);
 	}
 	
 	/* -- End Drawing methods -- */

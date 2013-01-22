@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
+import com.ProjectDragoon.util.interfaces.Utility;
 
 /**
  * An Axis-Aligned Bounding Box (AABB) used for collision detection. "HitBox" has a much nicer, quick sound to it.
@@ -12,8 +13,14 @@ import com.ProjectDragoon.util.Vector;
  * @author Alex
  *
  */
-public class HitBox {
+public class HitBox implements Utility {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
 	/**
 	 * The Host Position is the position of the entity that owns the HitBox. This vector is not a copy, but a reference.
 	 */
@@ -45,7 +52,7 @@ public class HitBox {
 		width = 0;
 	}
 	
-	public HitBox(Vector hostPos, Vector pos, int height, int width)
+	public HitBox(Vector hostPos, Vector pos, int width, int height)
 	{
 		hostPosition = hostPos;
 		position = new Vector(pos);
@@ -107,6 +114,23 @@ public class HitBox {
 		return v;
 	}
 	
+	public int top()
+	{
+		return (int)position.getY() + (int)hostPosition.getY();
+	}
+	public int left()
+	{
+		return (int)position.getX() + (int)hostPosition.getX();
+	}
+	public int right()
+	{
+		return (int)position.getX() + width + (int)hostPosition.getX();
+	}
+	public int bottom()
+	{
+		return (int)position.getY() + height + (int)hostPosition.getY();
+	}
+	
 	/* -- End CD methods -- */
 	
 	/*
@@ -121,6 +145,23 @@ public class HitBox {
 		int y = (int)v.getY();
 		g.drawRect(x - camera.x, y - camera.y, width, height);
 	}
-	
+
 	/* -- End Drawing methods -- */
+	
+	/*
+	 * Utility Interface Overrides
+	 */
+	@Override
+	public HitBox copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/* -- End of Utility Overrides -- */
+
+	@Override
+	public void restore() {
+		// TODO Auto-generated method stub
+		// nothing to see here.
+	}
+	
 }

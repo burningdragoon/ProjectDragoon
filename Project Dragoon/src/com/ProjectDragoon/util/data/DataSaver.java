@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import com.ProjectDragoon.sprites.Sprite;
+import com.ProjectDragoon.sprites.SpriteEntity;
 
 /**
  * DataSaver class provides save/load methods for all savable/serializable classes
@@ -19,6 +20,7 @@ public final class DataSaver {
 	 * Extensions:
 	 */
 	private static final String SPRITE_EXT = "sprite";
+	private static final String SPRITE_ENTITY_EXT = "spriteentity";
 	
 	/* 
 	 * SPRITE 
@@ -31,7 +33,7 @@ public final class DataSaver {
 		if(hasExtension(filename))
 		{
 			String ext = getExtension(filename);
-			if(ext.equals(SPRITE_EXT))
+			if(ext.equalsIgnoreCase(SPRITE_EXT))
 				savedFile = filename;
 			else
 				savedFile = filename + "." + SPRITE_EXT;
@@ -79,12 +81,81 @@ public final class DataSaver {
 		if(sprite != null)
 		{
 			// Texture won't save as is, so reload the spritesheet
-			sprite.reloadImage();
+			//sprite.reloadImage();
+			sprite.restore();
 		}
 		return sprite;
 	}
 	
 	/* END SPRITE */
+	
+	/*
+	 * Sprite Entity
+	 */
+	
+	public static void Save(SpriteEntity entity, String location, String filename) 
+	{
+		String savedFile = "";
+		
+		if(hasExtension(filename))
+		{
+			String ext = getExtension(filename);
+			if(ext.equalsIgnoreCase(SPRITE_ENTITY_EXT))
+				savedFile = filename;
+			else
+				savedFile = filename + "." + SPRITE_ENTITY_EXT;
+		}
+		else
+		{
+			savedFile = filename + "." + SPRITE_ENTITY_EXT;
+		}
+		
+		savedFile = location + savedFile;
+		
+		try
+		{
+			FileOutputStream fos = new FileOutputStream(savedFile);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(entity);
+			oos.close();
+			fos.close();
+		}
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+	}
+	
+	public static SpriteEntity LoadSpriteEntity(String file)
+	{
+		SpriteEntity entity = null;
+		
+		try
+		{
+			FileInputStream fis = new FileInputStream(file);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			entity = (SpriteEntity)ois.readObject();
+		}
+		catch(IOException ioe)
+		{
+			System.err.println("Error loading file: " + file);
+		}
+		catch(ClassNotFoundException cnfe)
+		{
+			System.err.println("Class 'SpriteEntity' Not Found.");
+		}
+		
+		// fix/load/restore any unserializable data.
+		if(entity != null)
+		{
+			//entity.getSprite().reloadImage();
+			entity.restore();
+		}
+		
+		return entity;
+	}
+	
+	/* -- END SPRITE ENTITY -- */
 	
 	/*
 	 * Helper Methods
@@ -98,9 +169,8 @@ public final class DataSaver {
 	
 	private static String getExtension(String filename)
 	{
-		String ext = "";
-		
-		return ext;
+		String[] strings = filename.split(".");
+		return strings[strings.length-1];
 	}
 	
 	/* -- End Helper -- */

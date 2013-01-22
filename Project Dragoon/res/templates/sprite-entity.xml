@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <sprite-entity>
+        <id></id>
+        <name></name>
+        <object-type></object-type>
+        <lifetime></lifetime>
+        <sprite></sprite>
+        <hitboxes>
+            <hitbox>
+                <name></name>
+                <x></x>
+                <y></y>
+                <z></z>
+                <width></width>
+                <height></height>
+            </hitbox>
+        </hitboxes>
+    </sprite-entity>
+</resources>

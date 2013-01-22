@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<sprite>
+	    <name>missile_test</name>
+		<image-file>/images/sprites/missile_test.png</image-file>
+		<dimensions auto="true" width="" height=""  />
+		<columns>2</columns>
+		<current-frame>0</current-frame>
+		<total-frames>2</total-frames>
+		<animations>
+			<animation-list>
+			</animation-list>
+			<frame-timer>500</frame-timer>
+			<direction>1</direction>
+		</animations>
+	</sprite>
+</resources>

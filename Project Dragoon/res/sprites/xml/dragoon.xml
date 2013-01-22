@@ -17,19 +17,19 @@
 				
 				<sprite-animation>
 				    <name>Walk_Down</name>
-					<frames>0,1,0,2</frames>
+					<frames>1,0,2,0</frames>
 					<delay>200</delay>
 				</sprite-animation>
 				
 				<sprite-animation>
 				    <name>Rest_Up</name>
-				    <frames>8</frames>
+				    <frames>6</frames>
 				    <delay>0</delay>
 				</sprite-animation>
 				
 				<sprite-animation>
 				    <name>Walk_Up</name>
-				    <frames>8,9,8,10</frames>
+				    <frames>7,6,8,6</frames>
 				    <delay>200</delay>
 				</sprite-animation>
 				
@@ -41,7 +41,7 @@
 				
 				<sprite-animation>
 				    <name>Walk_Right</name>
-				    <frames>12,13,12,14</frames>
+				    <frames>13,12,14,12</frames>
 				    <delay>200</delay>
 				</sprite-animation>
 				
@@ -53,8 +53,14 @@
 				
 				<sprite-animation>
 				    <name>Walk_Left</name>
-				    <frames>18,19,18,20</frames>
+				    <frames>19,18,20,18</frames>
 				    <delay>200</delay>
+				</sprite-animation>
+				
+				<sprite-animation>
+				    <name>rest_down_nohelmet</name>
+				    <frames>3</frames>
+				    <delay>0</delay>
 				</sprite-animation>
 
 			</animation-list>

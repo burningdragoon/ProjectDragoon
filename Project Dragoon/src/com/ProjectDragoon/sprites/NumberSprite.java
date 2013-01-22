@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import com.ProjectDragoon.Entity;
 import com.ProjectDragoon.graphics.Texture;
+import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
 
 public class NumberSprite extends Entity {
@@ -112,6 +113,11 @@ public class NumberSprite extends Entity {
 	public void draw(Graphics g) 
 	{
 		g.drawImage(image, (int)position.getX(), (int)position.getY(), null);
+	}
+	@Override
+	public void draw(Graphics g, Camera c)
+	{
+		
 	}
 	
 	/* -- End Entity -- */

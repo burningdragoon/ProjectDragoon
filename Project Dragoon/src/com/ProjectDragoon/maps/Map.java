@@ -114,11 +114,11 @@ public class Map {
 		tiles[row][col].setTile(value); 
 	}
 	
-	public void newTile(int row, int col, int value, int type)
+	public void newTile(int row, int col, int value, TileType type)
 	{
 		int rowValue = value / tileset.getColumns();
 		int colValue = value % tileset.getColumns();
-		tiles[row][col] = new Tile(tileset, rowValue, colValue, row, col);
+		tiles[row][col] = new Tile(tileset, rowValue, colValue, row, col, type);
 	}
 	
 	public void readMap(String filename)
@@ -146,7 +146,11 @@ public class Map {
 					int type = 0;
 					if(colValue.length > 1)	
 						type = Integer.parseInt(colValue[1]);
-					this.newTile(rowCount, colCount, value, type);
+					
+					TileType tileType = TileType.NONE;
+					tileType = tileType.convert(type);
+					
+					this.newTile(rowCount, colCount, value, tileType);
 					
 				}
 				rowCount++;
@@ -233,6 +237,6 @@ public class Map {
 		for(int x = 0-camera.x; x < width-camera.x; x += dx)
 			g.drawLine(x, 0, x, height);
 		for(int y = 0-camera.y; y < height-camera.y; y += dy)
-			g.drawLine(0, y+camera.y, width, y+camera.y);
+			g.drawLine(0, y, width, y);
 	}
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <sprite-entity>
+        <id>0</id>
+        <name>dragoon</name>
+        <object-type>0</object-type>
+        <lifetime>0</lifetime>
+        <sprite type="xml">dragoon.xml</sprite>
+        <hitboxes>
+            <hitbox>
+                <name>main</name>
+                <x>14</x>
+                <y>2</y>
+                <z>0</z>
+                <width>35</width>
+                <height>61</height>
+            </hitbox>
+        </hitboxes>
+    </sprite-entity>
+</resources>

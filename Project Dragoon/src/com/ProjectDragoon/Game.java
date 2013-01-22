@@ -31,15 +31,6 @@ public class Game extends JFrame implements WindowListener {
 	
 	public static final Random random = new Random(1);
 	
-	//private BattlePanel gamePanel;
-	//private SimpleBattlePanel gamePanel;
-	//private ImagePanel gamePanel;
-	//private SimpleAnimatedBattlePanel gamePanel;
-	//private WindowPanel gamePanel;
-	//private TileMapTestPanel gamePanel;
-	//private ScrollingTilesPanel gamePanel;
-	//private PlatformerPanel gamePanel;
-	//private TopDownPanel gamePanel;
 	private GamePanel gamePanel;
 	
 	public int i;
@@ -56,8 +47,8 @@ public class Game extends JFrame implements WindowListener {
 		//gamePanel = new WindowPanel(this, WIDTH, HEIGHT, period);
 		//gamePanel = new TileMapTestPanel(this, WIDTH, HEIGHT, period);
 		//gamePanel = new ScrollingTilesPanel(this, WIDTH, HEIGHT, period);
-		gamePanel = new PlatformerPanel(this, WIDTH, HEIGHT, period);
-		//gamePanel = new TopDownPanel(this, WIDTH, HEIGHT, period);
+		//gamePanel = new PlatformerPanel(this, WIDTH, HEIGHT, period);
+		gamePanel = new TopDownPanel(this, WIDTH, HEIGHT, period);
 		
 		// Absolute Positioning is not the best approach for UI, but whatevs for now.
         gamePanel.setLayout(null);

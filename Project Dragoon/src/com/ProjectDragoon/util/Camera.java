@@ -1,5 +1,7 @@
 package com.ProjectDragoon.util;
 
+import com.ProjectDragoon.sprites.SpriteEntity;
+
 public class Camera {
 
 	private int width;
@@ -116,6 +118,60 @@ public class Camera {
 	public boolean downFree()
 	{
 		return y < yMax;
+	}
+	
+	/**
+	 * Adjust the camera position to focus on the passed Entity.
+	 * The Entity e will appear to be at the center (or relative center) of the screen as long as 
+	 * there is space between where the Entity is in relation to the edge and center of the camera.
+	 * @param e
+	 */
+	public void adjust(SpriteEntity e)
+	{
+		/*
+		 * For each axis (x,y),
+		 * 1 - determine the center of the entity.
+		 * 2 - determine the distance between the entity and the edge of the camera
+		 * 3 - determine the distance between the entity and the center of the camera
+		 * 4 - adjust the camera to keep the entity in the center.
+		 * 		-- only adjust if the entity is not near the edge of the camera.
+		 */
+		
+		// x-axis
+		// 1
+		int spriteX = (int)e.getXPos() + (e.getWidth() / 2);
+		// 2
+		int cameraOffsetX = spriteX - x;
+		// 3
+		int centerOffsetX = cameraOffsetX - (width / 2);
+		// 4
+		x += centerOffsetX;
+		if(!leftFree())
+		{
+			x = xMin;
+		}
+		else if(!rightFree())
+		{
+			x = xMax;
+		}
+		
+		// y-axis
+		// 1
+		int spriteY = (int)e.getYPos() + (e.getHeight() / 2);
+		// 2
+		int cameraOffsetY = spriteY - y;
+		// 3
+		int centerOffsetY = cameraOffsetY - (height / 2);
+		// 4
+		y += centerOffsetY;
+		if(!upFree())
+		{
+			y = yMin;
+		}
+		else if(!downFree())
+		{
+			y = yMax;
+		}
 	}
 	
 	/* -- End Other -- */

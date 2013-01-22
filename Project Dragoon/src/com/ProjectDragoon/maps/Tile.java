@@ -15,7 +15,7 @@ public class Tile {
 	private int mapRow;
 	private int mapColumn;
 	private boolean hasTile;
-	private int tileType;
+	private TileType type;
 	
 	public Tile()
 	{
@@ -25,32 +25,20 @@ public class Tile {
 		mapRow = 0;
 		mapColumn = 0;
 		hasTile = true;
-		tileType = 0;
+		type = TileType.NONE;
 	}
 	
 	public Tile(TileSet tiles, int tsRow, int tsCol)
 	{
-		this(tiles, tsRow, tsCol, 0, 0, 0);
+		this(tiles, tsRow, tsCol, 0, 0, TileType.NONE);
 	}
 	
 	public Tile(TileSet tiles, int tsRow, int tsCol, int mapRow, int mapCol)
 	{
-		/*
-		tileset = tiles;
-		tilesetRow = tsRow;
-		tilesetColumn = tsCol;
-		if(tsRow < 0 || tsCol < 0)
-			hasTile = false;
-		else
-			hasTile = true;
-		this.mapRow = mapRow;
-		this.mapColumn = mapCol;
-		tileType = 0;
-		*/
-		this(tiles, tsRow, tsCol, mapRow, mapCol, 0);
+		this(tiles, tsRow, tsCol, mapRow, mapCol, TileType.NONE);
 	}
 	
-	public Tile(TileSet tiles, int tsRow, int tsCol, int mapRow, int mapCol, int type)
+	public Tile(TileSet tiles, int tsRow, int tsCol, int mapRow, int mapCol, TileType type)
 	{
 		tileset = tiles;
 		tilesetRow = tsRow;
@@ -61,7 +49,7 @@ public class Tile {
 			hasTile = true;
 		this.mapRow = mapRow;
 		this.mapColumn = mapCol;
-		tileType = type;
+		this.type = type;
 	}
 	
 	// Selectors & Mutators
@@ -79,6 +67,9 @@ public class Tile {
 	
 	public int getMapRow() { return mapRow; }
 	public void setMapRow(int r) { mapRow = r; }
+	
+	public TileType getTileType() { return type; }
+	public void setTileType(TileType t) { type = t; }
 	
 	public boolean hasTile() { return hasTile; }
 	
@@ -100,9 +91,27 @@ public class Tile {
 		}
 	}
 	
+	public void setTile(int value, TileType type)
+	{
+		if(value < 0)
+		{
+			tilesetRow = -1;
+			tilesetColumn = -1;
+			hasTile = false;
+		}
+		else
+		{
+			tilesetRow = value / tileset.getColumns();
+			tilesetColumn = value % tileset.getColumns();
+			hasTile = true;
+			this.type = type;
+		}
+	}
+	
 	public void draw(Graphics g, int x, int y)
 	{
 		if(hasTile)
 			tileset.drawTile(g, this, x, y);
 	}
-}
+
+} /** -- End of Class -- **/

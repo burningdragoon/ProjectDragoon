@@ -3,6 +3,7 @@ package com.ProjectDragoon.graphics;
 import java.awt.Graphics;
 
 import com.ProjectDragoon.Entity;
+import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
 
 /**
@@ -56,5 +57,9 @@ public class ImageEntity extends Entity {
 	public void draw(Graphics g) {
 		image.draw(g, (int)position.getX(), (int)position.getY());
 	}
-	
+	@Override
+	public void draw(Graphics g, Camera c)
+	{
+		
+	}
 }

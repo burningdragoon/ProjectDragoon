@@ -86,6 +86,12 @@ public class Timer implements Utility{
 		return null;
 	}
 	
+	@Override
+	public void restore()
+	{
+		reset();
+	}
+	
 	/* -- End Utility -- */
 
 }

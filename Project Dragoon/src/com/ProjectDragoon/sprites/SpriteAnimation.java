@@ -85,6 +85,11 @@ public class SpriteAnimation implements Utility {
 		
 		return anim;
 	}
+
+	@Override
+	public void restore() {
+		// no effect.
+	}
 	
 	/* -- End Utility -- */
 }

@@ -2,6 +2,7 @@ package com.ProjectDragoon;
 
 import java.awt.Graphics;
 
+import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Timer;
 import com.ProjectDragoon.util.interfaces.Utility;
 
@@ -106,12 +107,27 @@ public abstract class Entity implements Utility {
 	
 	/* -- End Lifetime -- */
 	
+	
 	/*
 	 * Abstract methods to be completed in extending classes
 	 */
 	public abstract void update();
 	public abstract void animate();
 	public abstract void draw(Graphics g);
+	public abstract void draw(Graphics g, Camera c);
 	
+	/* -- */
+	
+	/*
+	 * Utility Methods
+	 * +NOTE+ Not necessary to declare here, since Entity is also abstract, but in some cases it is useful
+	 */
+	
+	public void restore()
+	{
+		lifetimeTimer.reset();
+	}
+	
+	/* -- End Utility Methods -- */
 	
 }

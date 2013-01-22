@@ -12,6 +12,7 @@ import com.ProjectDragoon.graphics.Texture;
 import com.ProjectDragoon.maps.Map;
 import com.ProjectDragoon.maps.Tile;
 import com.ProjectDragoon.maps.TileSet;
+import com.ProjectDragoon.maps.TileType;
 import com.ProjectDragoon.physics.CollisionMap;
 import com.ProjectDragoon.physics.HitBox;
 import com.ProjectDragoon.sprites.Sprite;
@@ -59,7 +60,8 @@ public class PlatformerPanel extends GamePanel {
 	 */
 	
 	/**
-	 * Adjusts the camera position to keep the player centered on the screen when possible
+	 * Adjusts the camera position to keep the player centered on the screen when possible.
+	 * +NOTE+ same method created in Camera class because it makes more sense there. It also takes a parameter.
 	 */
 	public void adjustCamera()
 	{		
@@ -76,14 +78,15 @@ public class PlatformerPanel extends GamePanel {
 		if( !(playerCenterOffsetX < 0 && !camera.leftFree()) && !(playerCenterOffsetX > 0 && !camera.rightFree()) )
 			camera.x += playerCenterOffsetX;
 		
-		/*
+		//*
 		// Y axis ignored for now
 		int playerY = (int)player.getYPos() + (player.getHeight() / 2); 
 		int playerCameraOffsetY = playerY - camera.y;
-		int playerCenterOffsetY = playerCameraOffsetY - (camera.getHeight() / 1);
+		int playerCenterOffsetY = playerCameraOffsetY - (camera.getHeight() / 2);
+		
 		if( !(playerCenterOffsetY < 0 && !camera.upFree()) && !(playerCenterOffsetY > 0 && !camera.downFree()) )
 			camera.y += playerCenterOffsetY;
-		*/
+		//*/
 	}
 	
 	/**
@@ -154,7 +157,7 @@ public class PlatformerPanel extends GamePanel {
 					for(int col = curColumn; col <= destTileTop.getMapColumn(); col++)
 					{
 						Tile tile = map.getTile(row, col);
-						if(tile.hasTile())
+						if(tile.hasTile() && tile.getTileType() == TileType.SOLID)
 						{
 							// COLLISION!
 							// determine how much space before collision:
@@ -209,7 +212,7 @@ public class PlatformerPanel extends GamePanel {
 					for(int col = curColumn; col >= destTileTop.getMapColumn(); col--)
 					{
 						Tile tile = map.getTile(row, col);
-						if(tile.hasTile())
+						if(tile.hasTile() && tile.getTileType() == TileType.SOLID)
 						{
 							//Collision!
 							int difx = (tile.getMapColumn() * map.tileWidth()) + map.tileWidth() - curXLeft + 1;
@@ -241,7 +244,7 @@ public class PlatformerPanel extends GamePanel {
 			{
 				if(destTileLeft == null)
 				{
-					destTileLeft = map.getLastTileInRow(curYBottom / map.tileHeight());
+					destTileLeft = map.getFirstTileInRow(curYBottom / map.tileHeight());
 				}
 				else if(destTileRight == null)
 				{
@@ -254,7 +257,7 @@ public class PlatformerPanel extends GamePanel {
 					for(int row = curRow; row <= destTileLeft.getMapRow(); row++)
 					{
 						Tile tile = map.getTile(row, column);
-						if(tile != null && tile.hasTile())
+						if(tile != null && tile.hasTile() && tile.getTileType() == TileType.SOLID)
 						{
 							int dify = (tile.getMapRow() * map.tileHeight()) - curYBottom - 1;
 							player.setYVel(dify);
@@ -293,7 +296,7 @@ public class PlatformerPanel extends GamePanel {
 					for(int row = curRow; row >= destTileLeft.getMapRow(); row--)
 					{
 						Tile tile = map.getTile(row, column);
-						if(tile.hasTile())
+						if(tile.hasTile() && tile.getTileType() == TileType.SOLID)
 						{
 							int dify = (tile.getMapRow() * map.tileHeight()) + map.tileHeight() - curYTop + 1;
 							player.setYVel(dify);
@@ -323,6 +326,11 @@ public class PlatformerPanel extends GamePanel {
 		{
 			System.out.println("Yo man, get out of my way!");
 		}
+		
+	}
+	
+	public void environmentCollision(SpriteEntity entity)
+	{
 		
 	}
 	
@@ -357,18 +365,20 @@ public class PlatformerPanel extends GamePanel {
 		// Set up camera.
 		camera = new Camera(this.getScreenWidth(), this.getScreenHeight());
 		camera.setXRange(0, map.getWidth() - getScreenWidth());
-		camera.setYRange(0, map.getHeight() - getScreenHeight());
+		camera.setYRange(0, map.getHeight() - getScreenHeight() - 1);
 		
 		// Set up the player stuff
 		Sprite sprite = DataSaver.LoadSprite("res/sprites/kain.sprite");
 		sprite.setCurrentAnimation("Rest");
-		player = new SpriteEntity(sprite, new Vector());
+		//player = new SpriteEntity(sprite, new Vector());
+		player = DataSaver.LoadSpriteEntity("res/entities/kain.spriteentity");
+		//player = DataSaver.LoadSpriteEntity("res/entities/dragoon.spriteentity");
 		playerState = ONGROUND;
 		
-		HitBox hitbox = player.getHitBox();
-		hitbox.setPosition(25, 20);
-		hitbox.setWidth(13);
-		hitbox.setHeight(33);
+		//HitBox hitbox = player.getHitBox();
+		//hitbox.setPosition(25, 20);
+		//hitbox.setWidth(13);
+		//hitbox.setHeight(33);
 		
 		//test badguy thingy
 		badguy = new SpriteEntity(sprite, new Vector());
@@ -380,6 +390,8 @@ public class PlatformerPanel extends GamePanel {
 		sprite = DataSaver.LoadSprite("res/sprites/dragoon.sprite");
 		sprite.setCurrentAnimation("Walk_Down");
 		dragon = new SpriteEntity(sprite, new Vector());
+		dragon = DataSaver.LoadSpriteEntity("res/entities/dragoon.spriteentity");
+		dragon.getSprite().setCurrentAnimation("Walk_Down");
 		dragon.setPosition(100, 100);
 
 		
@@ -394,13 +406,13 @@ public class PlatformerPanel extends GamePanel {
 		
 		if(keyPressed(keys.RightKey()))
 		{
-			player.setXVel(40);
+			player.setXVel(3);
 			player.forward = false;
 		}
 		else if(keyPressed(keys.LeftKey()))
 		{
 			//player.setXVel(-1);
-			player.setXVel(-40);
+			player.setXVel(-3);
 			player.forward = true;
 		}
 		else
@@ -426,14 +438,14 @@ public class PlatformerPanel extends GamePanel {
 		//*
 		if(playerState == FALLING)
 		{
-			player.setYVel(40);
+			player.setYVel(3);
 			//player.sprite.setCurrentAnimation("");
 		}
 		else if(playerState == ONGROUND)
 		{
 			if(keyPressed(keys.ActionKey()))
 			{
-				player.setYVel(-40);
+				player.setYVel(-3);
 				playerState = JUMPING;
 				player.sprite.setCurrentAnimation("Jump");
 			}
@@ -441,6 +453,7 @@ public class PlatformerPanel extends GamePanel {
 			{
 				player.setYVel(0);
 				player.sprite.setCurrentAnimation("Rest");
+				//player.sprite.setCurrentAnimation("Rest_Down");
 			}
 		}
 		else if(playerState == JUMPING)
@@ -460,7 +473,8 @@ public class PlatformerPanel extends GamePanel {
 		badguy.animate();
 		
 		//update camera position.
-		adjustCamera();
+		//adjustCamera();
+		camera.adjust(player);
 	}
 	
 	@Override

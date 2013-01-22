@@ -18,7 +18,15 @@ public class BulkResourceLoader {
 	{
 		for(String filename : files)
 		{
-			resources.createSprites(filename);
+			resources.createSprites(filename, true);
+		}
+	}
+	
+	public void loadSpriteEntities(ArrayList<String> files)
+	{
+		for(String filename: files)
+		{
+			resources.createSpriteEntities(filename, true);
 		}
 	}
 	
@@ -31,8 +39,13 @@ public class BulkResourceLoader {
 		sprites.add("res/sprites/xml/arrows.xml");
 		sprites.add("res/sprites/xml/badguys.xml");
 		sprites.add("res/sprites/xml/dragoon.xml");
+		//loader.loadSprites(sprites);
 		
-		loader.loadSprites(sprites);
+		ArrayList<String> entities = new ArrayList<String>();
+		entities.add("res/entities/xml/kain-sprite-entity.xml");
+		entities.add("res/entities/xml/dragoon-sprite-entity.xml");
+		entities.add("res/entities/xml/missile_entity_test.xml");
+		loader.loadSpriteEntities(entities);
 		
 		
 	}

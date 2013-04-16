@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import com.ProjectDragoon.entity.SpriteEntity;
 import com.ProjectDragoon.sprites.Sprite;
-import com.ProjectDragoon.sprites.SpriteEntity;
 
 /**
  * DataSaver class provides save/load methods for all savable/serializable classes

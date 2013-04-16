@@ -1,9 +1,8 @@
-package com.ProjectDragoon.sprites;
+package com.ProjectDragoon.entity;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import com.ProjectDragoon.Entity;
 import com.ProjectDragoon.graphics.Texture;
 import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
@@ -12,7 +11,7 @@ public class NumberSprite extends Entity {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Vector position;
+	//private Vector position;
 	//private Texture numbers;
 	private BufferedImage image;
 	private int value;
@@ -36,6 +35,7 @@ public class NumberSprite extends Entity {
 	 * Selectors and Mutators
 	 */
 	
+	/*
 	public Vector getPosition()	{	return position;	}
 	public void setPosition(Vector v) {	position.set(v);	}
 	public void setPosition(double x, double y) {	position.set(x, y, 0);	}
@@ -48,6 +48,7 @@ public class NumberSprite extends Entity {
 	public double getYPos()	{	return position.getY();	}
 	public void setYPos(double y) {	position.setY(y);	}
 	public void setYPos(int y) {	position.setY(y);	}
+	*/
 	
 	public int getValue()
 	{

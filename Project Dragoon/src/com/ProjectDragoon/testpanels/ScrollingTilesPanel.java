@@ -97,14 +97,14 @@ public class ScrollingTilesPanel extends GamePanel {
 	@Override
 	public void gameUpdate() 
 	{
-		if(this.getKeyHandler().keyPressed(keys.LeftKey()))
+		if(this.getKeyboard().keyPressed(keys.LeftKey()))
 		{	
 			boolean inCenter = rect.x + (rect.width / 2) - camera.x == (getScreenWidth() / 2);
 			if(inCenter && camera.leftFree())
 				camera.x -=2;
 			rect.x -= 2;	
 		}
-		else if(this.getKeyHandler().keyPressed(keys.RightKey()))
+		else if(this.getKeyboard().keyPressed(keys.RightKey()))
 		{
 
 			// move position of rectangle
@@ -117,14 +117,14 @@ public class ScrollingTilesPanel extends GamePanel {
 			
 		}
 		
-		if(this.getKeyHandler().keyPressed((keys.UpKey())))
+		if(this.getKeyboard().keyPressed((keys.UpKey())))
 		{
 			boolean inCenter = rect.y + (rect.height / 2) - camera.y == (getScreenHeight() / 2);
 			if(inCenter && camera.upFree())
 				camera.y -= 2;
 			rect.y -= 2;
 		}
-		else if(this.getKeyHandler().keyPressed((keys.DownKey())))
+		else if(this.getKeyboard().keyPressed((keys.DownKey())))
 		{
 			boolean inCenter = rect.y + (rect.height / 2) - camera.y == (getScreenHeight() / 2);
 			if(inCenter && camera.downFree())

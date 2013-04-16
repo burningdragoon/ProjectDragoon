@@ -5,7 +5,7 @@ import com.ProjectDragoon.util.interfaces.EnumConverter;
 
 public enum TileType implements EnumConverter<TileType> {
 
-	NONE(0), SOLID(1);
+	NONE(0), SOLID(1), FILLED(2);
 	
 	private static ReverseEnumMap<TileType> map = new ReverseEnumMap<TileType>(TileType.class);
 	

@@ -83,7 +83,7 @@ public class SimpleBattle extends GameComponent{
 	
 	public boolean isKeyPressed(int keyCode)
 	{
-		return ((GamePanel)this.getParent()).getKeyHandler().keyPressed(keyCode);
+		return ((GamePanel)this.getParent()).getKeyboard().keyPressed(keyCode);
 	}
 	
 	public KeyValues getKeys()

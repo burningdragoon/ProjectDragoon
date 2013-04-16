@@ -1,10 +1,11 @@
-package com.ProjectDragoon.sprites;
+package com.ProjectDragoon.entity;
 
 import java.awt.Graphics;
 import java.util.HashMap;
 
-import com.ProjectDragoon.Entity;
 import com.ProjectDragoon.physics.HitBox;
+import com.ProjectDragoon.physics.Rectangle;
+import com.ProjectDragoon.sprites.Sprite;
 import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
 
@@ -19,35 +20,40 @@ public class SpriteEntity extends Entity {
 	private static final long serialVersionUID = 1L;	
 	
 	public Sprite sprite;
-	private Vector position;
-	private Vector velocity;
+	//private Vector position;
+	//private Vector velocity;
 	private HitBox hitBox;
+	private HashMap<String, HitBox> hitboxes;
 	
 	public boolean forward;
-	
-	private HashMap<String, HitBox> hitboxes;
+	public boolean moving;
+	public boolean onTile;
 	
 	private SpriteEntity()
 	{
 		super();
-		position = new Vector();
-		velocity = new Vector();
+		//position = new Vector();
+		//velocity = new Vector();
 		hitBox = null;
-		forward = true;
 		hitboxes = new HashMap<String, HitBox>();
+		
+		forward = true;
+		moving = false;
+		onTile = false;
 	}
 	
 	public SpriteEntity(Sprite sprite, Vector position)
 	{
-		super();
+		super(position);
 		this.sprite = sprite.copy();
-		this.position = new Vector(position);
-		velocity = new Vector();
+		//this.position = new Vector(position);
+		//velocity = new Vector();
 		hitBox = null;
+		hitboxes = new HashMap<String, HitBox>();
 		
 		forward = true;
-		
-		hitboxes = new HashMap<String, HitBox>();
+		moving = false;
+		onTile = false;
 	}
 	
 	public SpriteEntity(Sprite sprite)
@@ -59,6 +65,7 @@ public class SpriteEntity extends Entity {
 	 * Selectors & Mutators
 	 */
 	
+	/*
 	public Vector getPosition()	{	return position;	}
 	public void setPosition(Vector v) {	position.set(v);	}
 	public void setPosition(double x, double y) {	position.set(x, y, 0);	}
@@ -84,6 +91,7 @@ public class SpriteEntity extends Entity {
 	public double getYVel() { return velocity.getY();	}
 	public void setYVel(double y) { velocity.setY(y);	}
 	public void setYVel(int y) { velocity.setY(y);	}
+	*/
 	
 	public int getWidth() { return sprite.getWidth(); }
 	public int getHeight() { return sprite.getHeight(); }
@@ -142,6 +150,31 @@ public class SpriteEntity extends Entity {
 		}
 	}
 	
+	/**
+	 * Returns a Rectangle representing the broad collision detection bounding box.
+	 * @return
+	 */
+	public Rectangle getBroadBoundingRectangle()
+	{
+		Rectangle rect = new Rectangle();
+		rect.x = hitBox.left();
+		rect.y = hitBox.top();
+		rect.width = hitBox.getWidth() + (int)Math.abs(getXVel());
+		rect.height = hitBox.getHeight() + (int)Math.abs(getYVel());
+		
+		// adjust x,y based on velocity
+		if(getXVel() < 0)
+		{
+			rect.x += getXVel();
+		}
+		if(getYVel() < 0)
+		{
+			rect.y += getYVel();
+		}
+			
+		return rect;
+	}
+	
 	/* -- -- */
 	
 	
@@ -177,22 +210,25 @@ public class SpriteEntity extends Entity {
 	 * Sprite collision detection
 	 */
 	
-	/**
-	 * -1: no collision
-	 *  0: collide left
-	 *  1: collide right
-	 *  2: collide top
-	 *  3: collide bottom
-	 * @param entity
-	 * @return
-	 */
-	public int CollideWith(SpriteEntity entity)
+	public boolean isAbove(SpriteEntity entity)
 	{
-		int result = -1;
-		
-		//CollisionMap entityMap = entity.getCollisionMap();
-		
-		return result;
+		HitBox box2 = entity.getHitBox();
+		return hitBox.top() < box2.top() && hitBox.bottom() < box2.top();
+	}
+	public boolean isBelow(SpriteEntity entity)
+	{
+		HitBox box2 = entity.getHitBox();
+		return hitBox.top() > box2.bottom() && hitBox.bottom() > box2.bottom();
+	}
+	public boolean isToLeft(SpriteEntity entity)
+	{
+		HitBox box2 = entity.getHitBox();
+		return hitBox.left() < box2.left() && hitBox.right() < box2.left();
+	}
+	public boolean isToRight(SpriteEntity entity)
+	{
+		HitBox box2 = entity.getHitBox();
+		return hitBox.left() > box2.right() && hitBox.right() > box2.right();
 	}
 	
 	/* -- End Sprite Collision Detection -- */
@@ -264,9 +300,16 @@ public class SpriteEntity extends Entity {
 	
 	public void draw(Graphics g, Camera camera)
 	{
-		sprite.draw(g, (int)position.getX() - camera.x, (int)position.getY() - camera.y, forward);
+		//sprite.draw(g, (int)position.getX() - camera.x, (int)position.getY() - camera.y, forward);
 		if(hitBox != null)
 			hitBox.draw(g, camera);
+		
+		sprite.draw(g, (int)position.getX() - camera.x, (int)position.getY() - camera.y, forward);
+		
+		//draw broad aabb
+		//Rectangle rect = getBroadBoundingRectangle();
+		//g.setColor(Color.yellow);
+		//g.drawRect(rect.x - camera.x, rect.y - camera.y, rect.width, rect.height);
 	}
 	
 	/* -- End Drawing methods -- */

@@ -18,7 +18,7 @@
 				<sprite-animation>
 				    <name>Walk_Down</name>
 					<frames>1,0,2,0</frames>
-					<delay>200</delay>
+					<delay>200,200,200,200</delay>
 				</sprite-animation>
 				
 				<sprite-animation>
@@ -30,19 +30,19 @@
 				<sprite-animation>
 				    <name>Walk_Up</name>
 				    <frames>7,6,8,6</frames>
-				    <delay>200</delay>
+				    <delay>200,200,200,200</delay>
 				</sprite-animation>
 				
 				<sprite-animation>
 				    <name>Rest_Right</name>
 				    <frames>12</frames>
-				    <delay>0</delay>
+				    <delay>200,200,200,200</delay>
 				</sprite-animation>
 				
 				<sprite-animation>
 				    <name>Walk_Right</name>
 				    <frames>13,12,14,12</frames>
-				    <delay>200</delay>
+				    <delay>200,200,200,200</delay>
 				</sprite-animation>
 				
 				<sprite-animation>
@@ -54,7 +54,7 @@
 				<sprite-animation>
 				    <name>Walk_Left</name>
 				    <frames>19,18,20,18</frames>
-				    <delay>200</delay>
+				    <delay>200,200,200,200</delay>
 				</sprite-animation>
 				
 				<sprite-animation>

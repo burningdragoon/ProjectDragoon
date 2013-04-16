@@ -119,10 +119,10 @@ public class WindowPanel extends GamePanel {
 	public void gameUpdate() 
 	{
 		// change background color every mouse click.
-		if(mouseHandler.isClicked(MouseInputHandler.MOUSE_BUTTON_1))
+		if(mouse.isClicked(MouseInputHandler.MOUSE_BUTTON_1))
 		{
-			int x = mouseHandler.getX();
-			int y = mouseHandler.getY();
+			int x = mouse.getX();
+			int y = mouse.getY();
 			String sX = "";
 			String sY = "";
 			
@@ -158,17 +158,17 @@ public class WindowPanel extends GamePanel {
 		dbg.fillRect(0, 0, 800, 600);
 		
 		//window.draw(dbg);
-		//window2.draw(dbg);
-		//window3.draw(dbg);
+		window2.draw(dbg);
+		window3.draw(dbg);
 		//window4.draw(dbg);
-		//window5.draw(dbg);
-		//window6.draw(dbg);
+		window5.draw(dbg);
+		window6.draw(dbg);
 		//dbg.setColor(Color.black);
 		//dbg.drawRect(0, 0, width, height);
 		
 		dbg.setColor(Color.white);
 		dbg.drawString("FPS: " + df.format(getFPS()), 0, fontInfo.getHeight());
-		dbg.drawString("Mouse: " + mouseHandler.getX() + "," + mouseHandler.getY(), 0, fontInfo.getHeight()*2);
+		dbg.drawString("Mouse: " + mouse.getX() + "," + mouse.getY(), 0, fontInfo.getHeight()*2);
 		
 	}
 	

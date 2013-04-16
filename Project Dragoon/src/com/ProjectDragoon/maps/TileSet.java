@@ -1,5 +1,6 @@
 package com.ProjectDragoon.maps;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import com.ProjectDragoon.graphics.Texture;
@@ -66,5 +67,23 @@ public class TileSet {
 		int w = tileWidth;
 		int h = tileHeight;
 		tilesheet.draw(g, desX, desY, srcX, srcY, w, h);
+		
+		Color c;
+		switch(tile.getTileType())
+		{
+			case SOLID:
+				c = Color.red;
+				break;
+			case FILLED:
+				c = Color.blue;
+				break;
+			case NONE:
+			default:
+				c = Color.white;
+				break;
+		}
+		
+		g.setColor(c);
+		g.drawRect(desX, desY, w-1, h-1);
 	}
 }

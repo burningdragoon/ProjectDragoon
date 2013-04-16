@@ -1,12 +1,13 @@
 package com.ProjectDragoon.maps;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Tile {
 	
 	//Tile types:
-	private static final int FREE = 0;
-	private static final int SOLID = 1;
+	//private static final int FREE = 0;
+	//private static final int SOLID = 1;
 	// --
 	
 	private TileSet tileset;
@@ -108,10 +109,15 @@ public class Tile {
 		}
 	}
 	
+	public boolean isFree()
+	{
+		return type == TileType.NONE || type == null;
+	}
+	
 	public void draw(Graphics g, int x, int y)
 	{
 		if(hasTile)
-			tileset.drawTile(g, this, x, y);
+			tileset.drawTile(g, this, x, y);	
 	}
 
 } /** -- End of Class -- **/

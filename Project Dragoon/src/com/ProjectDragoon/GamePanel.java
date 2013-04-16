@@ -2,12 +2,17 @@ package com.ProjectDragoon;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import com.ProjectDragoon.states.GameState;
+import com.ProjectDragoon.states.GameStateList;
+import com.ProjectDragoon.states.State;
 import com.ProjectDragoon.util.KeyInputHandler;
 import com.ProjectDragoon.util.MouseInputHandler;
 
@@ -42,13 +47,17 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private Color bgColor;
 	
+	protected Font font;
+	protected FontMetrics fontInfo;
+	
 	protected Graphics dbg;
 	protected BufferedImage dbImage = null;
 	
-	protected KeyInputHandler keyHandler;
-	protected MouseInputHandler mouseHandler;
+	protected KeyInputHandler keyboard;
+	protected MouseInputHandler mouse;
 	
-	
+	protected GameState state;
+	protected GameStateList stateList;
 	
 	public GamePanel(Game game, int width, int height, long period)
 	{
@@ -69,14 +78,21 @@ public class GamePanel extends JPanel implements Runnable {
 		setFocusable(true);
 		requestFocus(); // the JPanel now has focus and receives input events
 		
+		//default font settings
+		font = new Font("Courier", Font.BOLD, 14);
+		fontInfo = this.getFontMetrics(font);
+		
 		//Keyboard handler
-		keyHandler = new KeyInputHandler();
-		addKeyListener(keyHandler);
+		keyboard = new KeyInputHandler();
+		addKeyListener(keyboard);
 		
 		//Mouse handler
-		mouseHandler = new MouseInputHandler();
-		this.addMouseListener(mouseHandler);
-		this.addMouseMotionListener(mouseHandler);
+		mouse = new MouseInputHandler();
+		this.addMouseListener(mouse);
+		this.addMouseMotionListener(mouse);
+		
+		state = null;
+		stateList = new GameStateList();
 		
 	}
 	
@@ -98,17 +114,59 @@ public class GamePanel extends JPanel implements Runnable {
 		return currentFPS;
 	}
 	
-	public KeyInputHandler getKeyHandler() { return keyHandler; }
+	public KeyInputHandler getKeyboard() { return keyboard; }
+	public MouseInputHandler getMouse() { return mouse; }
+	
+	public GameState getCurrentState() { return state; }
+	public void setState(int id)
+	{
+		state = stateList.getState(id);
+	}
 	
 	/* -- End of Selectors and Mutators -- */
 	
 	/*
-	 * Other Utility methods
+	 * State Handling
+	 */
+	
+	public void initStates() {}
+	
+	public void addState(GameState state)
+	{
+		stateList.add(state.getId(), state);
+	}
+	
+	public void enterState(int id)
+	{
+		if(state != null)
+		{
+			GameState oldState = state;
+			oldState.exit(this);
+		}
+		state = stateList.getState(id);
+		state.enter(this);
+		
+	}
+	
+	public void enterState(State s)
+	{
+		this.enterState(s.convert());
+	}
+	
+	public GameState getState(int id)
+	{
+		return stateList.getState(id);
+	}
+	
+	/* -- ENd of State Handling -- */
+	
+	/*
+	 * Input Handling 
 	 */
 	
 	public boolean keyPressed(int key)
 	{
-		return keyHandler.keyPressed(key);
+		return keyboard.keyPressed(key);
 	}
 	
 	public boolean keyReleased(int key)
@@ -116,7 +174,15 @@ public class GamePanel extends JPanel implements Runnable {
 		return false;
 	}
 	
-	/* -- End of Utility methods -- */
+	public boolean mousePressed(int button)
+	{
+		return mouse.isPressed(button);
+	}
+	
+	public void handleInput() {}
+	
+	/* -- End of Input Handling -- */
+	
 	
 	public void gameOver()
 	{
@@ -155,7 +221,8 @@ public class GamePanel extends JPanel implements Runnable {
 	 * Initializes all variables and what not for the game, not handled in the Constructor.
 	 */
 	protected void gameInit()
-	{	
+	{
+		initStates();
 	}
 
 	/**
@@ -259,6 +326,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		dbg.setColor(bgColor);
 		dbg.fillRect(0, 0, PWIDTH, PHEIGHT);
+		dbg.setFont(font);
 	}
 	
 	

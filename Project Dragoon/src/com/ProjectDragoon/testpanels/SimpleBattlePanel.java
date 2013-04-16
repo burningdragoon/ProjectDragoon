@@ -50,7 +50,7 @@ public class SimpleBattlePanel extends GamePanel {
 	public void gameUpdate()
 	{
 		// check if any exit keys have been pressed...
-		if(keyHandler.keyPressed(KeyEvent.VK_ESCAPE))
+		if(keyboard.keyPressed(KeyEvent.VK_ESCAPE))
 		{
 			//exit game.
 		}

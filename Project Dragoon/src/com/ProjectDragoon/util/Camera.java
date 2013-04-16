@@ -1,6 +1,6 @@
 package com.ProjectDragoon.util;
 
-import com.ProjectDragoon.sprites.SpriteEntity;
+import com.ProjectDragoon.entity.SpriteEntity;
 
 public class Camera {
 

@@ -64,7 +64,8 @@ public class ImagePanel extends GamePanel{
 		SpriteAnimation walkAnim = new SpriteAnimation(2);
 		int[] walkFrames = {1,2};
 		walkAnim.setFrames(walkFrames);
-		walkAnim.setDelay(200);
+		//walkAnim.setDelay(200);
+		walkAnim.setFrameDelay(200);
 		sprite.AddAnimations("Walk", walkAnim);
 		
 		stopTimer = new Timer();
@@ -77,7 +78,7 @@ public class ImagePanel extends GamePanel{
 	{
 		boolean walking = sprite.getCurrentAnimationName().equals("Walk");
 		
-		if(keyHandler.keyPressed(options.keys.ActionKey()))
+		if(keyboard.keyPressed(options.keys.ActionKey()))
 		{
 			if(!walking)
 				sprite.setCurrentAnimation("Walk");

@@ -1,7 +1,7 @@
 package com.Testing;
 
+import com.ProjectDragoon.entity.SpriteEntity;
 import com.ProjectDragoon.sprites.Sprite;
-import com.ProjectDragoon.sprites.SpriteEntity;
 import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
 import com.ProjectDragoon.util.data.DataSaver;

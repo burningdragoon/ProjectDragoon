@@ -8,13 +8,13 @@ import java.util.Random;
 import com.ProjectDragoon.Game;
 import com.ProjectDragoon.GamePanel;
 import com.ProjectDragoon.KeyValues;
+import com.ProjectDragoon.entity.SpriteEntity;
 import com.ProjectDragoon.graphics.Texture;
 import com.ProjectDragoon.maps.Map;
 import com.ProjectDragoon.maps.Tile;
 import com.ProjectDragoon.maps.TileSet;
 import com.ProjectDragoon.physics.CollisionMap;
 import com.ProjectDragoon.sprites.Sprite;
-import com.ProjectDragoon.sprites.SpriteEntity;
 import com.ProjectDragoon.util.Timer;
 import com.ProjectDragoon.util.Vector;
 import com.ProjectDragoon.util.data.DataSaver;
@@ -197,7 +197,7 @@ public class TileMapTestPanel extends GamePanel {
 		
 		if(guyState == ONGROUND)
 		{
-			if(this.getKeyHandler().keyPressed(keys.ActionKey()))
+			if(this.getKeyboard().keyPressed(keys.ActionKey()))
 			{
 				guyState = JUMPING;
 				jumpTimer.reset();
@@ -205,7 +205,7 @@ public class TileMapTestPanel extends GamePanel {
 		}
 		else if(guyState == JUMPING)
 		{
-			if(!this.getKeyHandler().keyPressed(keys.ActionKey()))
+			if(!this.getKeyboard().keyPressed(keys.ActionKey()))
 			{
 				guyState = FALLING;
 			}
@@ -237,11 +237,11 @@ public class TileMapTestPanel extends GamePanel {
 			default:
 		}
 		
-		if(getKeyHandler().keyPressed(keys.RightKey()))
+		if(getKeyboard().keyPressed(keys.RightKey()))
 		{
 			guy.setXVel(2);
 		}
-		else if(getKeyHandler().keyPressed(keys.LeftKey()))
+		else if(getKeyboard().keyPressed(keys.LeftKey()))
 		{
 			guy.setXVel(-2);
 		}

@@ -21,8 +21,8 @@ public abstract class GameComponent extends Component{
 	public abstract void update();
 	public abstract void render(Graphics g);
 	
-	public KeyInputHandler getKeyHandler()
+	public KeyInputHandler getKeyboard()
 	{
-		return ((GamePanel)this.getParent()).keyHandler;
+		return ((GamePanel)this.getParent()).keyboard;
 	}
 }

@@ -4,18 +4,19 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 
-import com.ProjectDragoon.Entity;
-import com.ProjectDragoon.EntityList;
 import com.ProjectDragoon.Game;
 import com.ProjectDragoon.GamePanel;
 import com.ProjectDragoon.KeyValues;
+import com.ProjectDragoon.entity.Entity;
+import com.ProjectDragoon.entity.EntityList;
+import com.ProjectDragoon.entity.SpriteEntity;
 import com.ProjectDragoon.graphics.Texture;
 import com.ProjectDragoon.maps.Map;
 import com.ProjectDragoon.maps.Tile;
 import com.ProjectDragoon.maps.TileSet;
 import com.ProjectDragoon.maps.TileType;
 import com.ProjectDragoon.physics.HitBox;
-import com.ProjectDragoon.sprites.SpriteEntity;
+import com.ProjectDragoon.physics.Rectangle;
 import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Timer;
 import com.ProjectDragoon.util.Vector;
@@ -37,6 +38,11 @@ public class TopDownPanel extends GamePanel {
 	private SpriteEntity player;
 	
 	private SpriteEntity enemy;
+	private SpriteEntity enemy2;
+	private int enemyVel = 10;
+	private int enemyDist;
+	private int enemyDistMoved;
+	private int enemy2DistMoved;
 	private Timer enemyMoveTimer;
 	private int enemyMoveTime;
 	
@@ -45,8 +51,10 @@ public class TopDownPanel extends GamePanel {
 	private int totalMissiles;
 	private boolean canFire;
 	
-	private int defaultXVelocity = 3;
-	private int defaultYVelocity = 3;
+	private int defaultXVelocity = 5;
+	private int defaultYVelocity = 5;
+	
+	private String message;
 	
 	public TopDownPanel(Game game, int width, int height, long period) {
 		super(game, width, height, period);
@@ -63,12 +71,28 @@ public class TopDownPanel extends GamePanel {
 	public void collisionDetection()
 	{
 		mapCollision(map, player);
+		mapCollision(map, enemy);
+		mapCollision(map, enemy2);
 		for(Entity e: entities.list())
+		{
 			mapCollision(map, (SpriteEntity)e);
+			entityCollision((SpriteEntity)e, enemy);
+			entityCollision((SpriteEntity)e, enemy2);
+		}
+		/*
 		if(entityCollision(player, enemy))
 		{
 			entityCollisionHandle(player, enemy);
 		}
+		if(entityCollision(player, enemy2))
+		{
+			entityCollisionHandle(player, enemy2);
+		}
+		*/
+		entityCollision(player, enemy);
+		//entityCollision(enemy, player);
+		entityCollision(player, enemy2);
+		entityCollision(enemy, enemy2);
 	}
 	
 	/**
@@ -90,10 +114,10 @@ public class TopDownPanel extends GamePanel {
 	{
 		HitBox hitbox = entity.getHitBox();
 		Vector curPos = hitbox.getPosition();
-		int curXLeft = (int)hitbox.TopLeft().getX();
-		int curXRight = (int)hitbox.TopRight().getX();
-		int curYTop = (int)hitbox.TopLeft().getY();
-		int curYBottom = (int)hitbox.BottomLeft().getY();
+		int curXLeft = hitbox.left();//(int)hitbox.TopLeft().getX();
+		int curXRight = hitbox.right();//(int)hitbox.TopRight().getX();
+		int curYTop = hitbox.top();//(int)hitbox.TopLeft().getY();
+		int curYBottom = hitbox.bottom();//(int)hitbox.BottomLeft().getY();
 		
 		Vector destPos = new Vector(curPos);
 		destPos.Add(entity.getVelocity());
@@ -131,8 +155,9 @@ public class TopDownPanel extends GamePanel {
 		if(entity.getXVel() > 0)
 		{
 			int curColumn = curXRight / map.tileWidth();
+			int curRow = curYTop / map.tileHeight();
 			destTileTop = map.getTile(curYTop / map.tileHeight(), destXRight / map.tileWidth());
-			destTileBottom = map.getTile(curYBottom / map.tileHeight(), destXRight / map.tileWidth());
+			destTileBottom = map.getTile((curYBottom-1) / map.tileHeight(), destXRight / map.tileWidth());
 			
 			if(!(destTileTop == null && destTileBottom == null))
 			{
@@ -145,7 +170,7 @@ public class TopDownPanel extends GamePanel {
 					destTileBottom = map.getLastTileInColumn(curXRight / map.tileWidth());
 				}
 				
-				for(int row = destTileTop.getMapRow(); row <= destTileBottom.getMapRow(); row++)
+				for(int row = curRow; row <= destTileBottom.getMapRow(); row++)
 				{
 					boolean collide = false;
 					
@@ -158,9 +183,8 @@ public class TopDownPanel extends GamePanel {
 							// Congratulations on detecting DAT COLLISION.
 							// Determine how much space between the entity and the point of collision
 							// This is equal to the difference the far right of the current position, and the far left of the destination tile.
-							int difx = (tile.getMapColumn() * map.tileWidth()) - curXRight - 1;
+							int difx = (tile.getMapColumn() * map.tileWidth()) - curXRight;// - 1;
 							entity.setXVel(difx);
-							//entity.moveX(difx - (int)entity.getXVel());
 							collide = true;
 							break;
 						}
@@ -176,7 +200,7 @@ public class TopDownPanel extends GamePanel {
 		{
 			int curColumn = curXLeft / map.tileWidth();
 			destTileTop = map.getTile(curYTop / map.tileHeight(), destXLeft / map.tileWidth());
-			destTileBottom = map.getTile(curYBottom / map.tileHeight(), destXLeft / map.tileWidth());
+			destTileBottom = map.getTile((curYBottom-1) / map.tileHeight(), destXLeft / map.tileWidth());
 			
 			if(!(destTileTop == null && destTileBottom == null))
 			{
@@ -198,9 +222,8 @@ public class TopDownPanel extends GamePanel {
 						if(isCollidable(tile))
 						{
 							//Collision!
-							int difx = (tile.getMapColumn() * map.tileWidth()) + map.tileWidth() - curXLeft + 1;
+							int difx = (tile.getMapColumn() * map.tileWidth()) + map.tileWidth() - curXLeft;
 							entity.setXVel(difx);
-							//entity.moveX(difx - (int)entity.getXVel());
 							collide = true;
 							break;
 						}
@@ -217,7 +240,7 @@ public class TopDownPanel extends GamePanel {
 		{
 			int curRow = curYBottom / map.tileHeight();
 			destTileLeft = map.getTile(destYBottom / map.tileHeight(), curXLeft / map.tileWidth());
-			destTileRight = map.getTile(destYBottom / map.tileHeight(), curXRight / map.tileWidth());
+			destTileRight = map.getTile(destYBottom / map.tileHeight(), (curXRight-1) / map.tileWidth());
 			
 			if(!(destTileLeft == null && destTileRight == null))
 			{
@@ -238,9 +261,8 @@ public class TopDownPanel extends GamePanel {
 						Tile tile = map.getTile(row, column);
 						if(isCollidable(tile))
 						{
-							int dify = (tile.getMapRow() * map.tileHeight()) - curYBottom - 1;
+							int dify = (tile.getMapRow() * map.tileHeight()) - curYBottom;// - 1;
 							entity.setYVel(dify);
-							//entity.moveY(dify - (int)entity.getYVel());
 							collide = true;
 							break;
 						}
@@ -257,7 +279,7 @@ public class TopDownPanel extends GamePanel {
 		{
 			int curRow = curYTop / map.tileHeight();
 			destTileLeft = map.getTile(destYTop / map.tileHeight(), curXLeft / map.tileWidth());
-			destTileRight = map.getTile(destYTop / map.tileHeight(), curXRight / map.tileWidth());
+			destTileRight = map.getTile(destYTop / map.tileHeight(), (curXRight-1) / map.tileWidth());
 			
 			if(!(destTileLeft == null && destTileRight == null))
 			{
@@ -278,9 +300,8 @@ public class TopDownPanel extends GamePanel {
 						Tile tile = map.getTile(row, column);
 						if(isCollidable(tile))
 						{
-							int dify = (tile.getMapRow() * map.tileHeight()) + map.tileHeight() - curYTop + 1;
+							int dify = (tile.getMapRow() * map.tileHeight()) + map.tileHeight() - curYTop;
 							entity.setYVel(dify);
-							//entity.moveY(dify - (int)entity.getYVel());
 							collide = true;
 							break;
 						}
@@ -294,7 +315,7 @@ public class TopDownPanel extends GamePanel {
 		}
 	}
 	
-	public boolean entityCollision(SpriteEntity e1, SpriteEntity e2)
+	public void entityCollision(SpriteEntity e1, SpriteEntity e2)
 	{
 		//+note+ test version. Check for collision between player and enemy.
 		/*
@@ -310,6 +331,7 @@ public class TopDownPanel extends GamePanel {
 		*/
 		
 		// +note+ v2: test for future collision.
+		/*
 		HitBox e1HB = e1.getHitBox();
 		HitBox e2HB = e2.getHitBox();
 		
@@ -329,91 +351,449 @@ public class TopDownPanel extends GamePanel {
 				e1Top > e2Bottom ||
 				e1Bottom < e2Top
 				);
+		//*/
+		
+		// +note+ v3: getting broad pass box via entity
+		//*
+		/*
+		Rectangle rect1 = e1.getBroadBoundingRectangle();
+		Rectangle rect2 = e2.getBroadBoundingRectangle();
+		return rect1.collides(rect2);
+		*/
+
+		if(entityBroadCollide(e1, e2))
+		{
+			entityCollisionHandle(e1, e2);
+		}
+		
+	}
+	
+	public boolean entityBroadCollide(SpriteEntity e1, SpriteEntity e2)
+	{
+		Rectangle rect1 = e1.getBroadBoundingRectangle();
+		Rectangle rect2 = e2.getBroadBoundingRectangle();
+		return rect1.collides(rect2);
 	}
 	
 	public void entityCollisionHandle(SpriteEntity e1, SpriteEntity e2)
 	{
-		// Assuming e1 is the player entity for now. Also assuming e2 isn't moving
+		/*
+		 * +Note+ Currently assumes both objects are equal in terms of collidability.
+		 * 
+		 * Handles each collision by adjusting the entities' velocities so at next update they will meet instead of pass through each other.
+		 */
 		
-			int difx = (int)e1.getXVel();
-			int dify = (int)e1.getYVel();
-			int difx2 = (int)e2.getXVel();
-			int dify2 = (int)e2.getYVel();
+		int difx = (int)e1.getXVel();
+		int dify = (int)e1.getYVel();
+		int difx2 = (int)e2.getXVel();
+		int dify2 = (int)e2.getYVel();
+		
+		HitBox e1HB = e1.getHitBox();
+		HitBox e2HB = e2.getHitBox();
+		
+		int e1Right = e1HB.right();
+		int e1Left = e1HB.left();
+		int e1Top = e1HB.top();
+		int e1Bottom = e1HB.bottom();
+		
+		int e2Right = e2HB.right();
+		int e2Left = e2HB.left();
+		int e2Top = e2HB.top();
+		int e2Bottom = e2HB.bottom();
+		
+		boolean alreadyIntersects = !(
+				e1Left > e2Right ||
+				e1Right < e2Left ||
+				e1Top > e2Bottom ||
+				e1Bottom < e2Top
+				);
+		
+		if(alreadyIntersects)
+		{
+			// probably should do stuff here.
+			System.out.println("I'm inside you.");
+		}
+		else
+		{
+			double e1XVel = e1.getXVel();
+			double e1YVel = e1.getYVel();
+			double e2XVel = e2.getXVel();
+			double e2YVel = e2.getYVel();
 			
-			HitBox e1HB = e1.getHitBox();
-			HitBox e2HB = e2.getHitBox();
+			// entity 1, entity 2:
 			
-			int e1Right = e1HB.right();// + (int)e1.getXVel();
-			int e1Left = e1HB.left();// + (int)e1.getXVel();
-			int e1Top = e1HB.top();// + (int)e1.getYVel();
-			int e1Bottom = e1HB.bottom();// + (int)e1.getYVel();
-			
-			int e2Right = e2HB.right();// + (int)e2.getXVel();
-			int e2Left = e2HB.left();// + (int)e2.getXVel();
-			int e2Top = e2HB.top();// + (int)e2.getYVel();
-			int e2Bottom = e2HB.bottom();// + (int)e2.getYVel();
-			
-			boolean intersectX = !(
-					e1Left + (int)e1.getXVel() > e2Right + (int)e2.getXVel() ||
-					e1Right + (int)e1.getXVel() < e2Left + (int)e2.getXVel() ||
-					e1Top > e2Bottom ||
-					e1Bottom < e2Top
-					);
-			
-			boolean intersectY = !(
-					e1Left > e2Right ||
-					e1Right < e2Left ||
-					e1Top + (int)e1.getYVel() > e2Bottom + (int)e2.getYVel() ||
-					e1Bottom + (int)e1.getYVel() < e2Top + (int)e2.getYVel()
-					);
-			
-			if(intersectX)
+			/*
+			 * Horizontal Collision
+			 * To avoid catching horiz collision when on the entities are on top of each other
+			 * only handling collision when the first entity is +not+ completely above or below the second entity
+			 */
+			if(!e1.isAbove(e2) && !e1.isBelow(e2))
 			{
-				if((int)e1.getXVel() != 0 && (int)e2.getXVel() == 0)
+				// right
+				if(e1XVel > 0)
 				{
-					if(e1.getXVel() > 0)
+					// right, right
+					if(e2XVel > 0)
 					{
-						difx = e2Left - e1Right - 1;
+						if(e1.isToLeft(e2))
+						{
+							difx = e2Left - e1Right - 1;
+						}
+						else if(e1.isToRight(e2))
+						{
+							// leave e1's x-velocity alone
+							//difx2 = e1Left + (int)e1XVel - e2Right - 1;
+							difx2 = e1Left - e2Right - 1;
+						}
+						else
+						{
+							// do nothing?
+						}
 					}
-					else if(e1.getXVel() < 0)
+					// right, left
+					else if(e2XVel < 0)
 					{
-						difx = e2Right - e1Left + 1;
+						if(Math.abs(e1XVel) > Math.abs(e2XVel))
+						{
+							difx = e2Left - e1Right - 1;
+							difx2 = 0;
+						}
+						else if(Math.abs(e1XVel) < Math.abs(e2XVel))
+						{
+							difx = 0;
+							difx2 = e1Right - e2Left + 1;
+						}
+						else
+						{
+							int dif = e2Left - e1Right - 1;
+							difx = dif / 2;
+							if(dif % 2 == 0)
+							{
+								difx2 = -difx;
+							}
+							else
+							{
+								difx2 = -difx - 1;
+							}
+						}
+					}
+					// right, not
+					else
+					{	
+						difx = e2Left - e1Right - 1;
+						//difx2 = 0;
 					}
 				}
-				else if((int)e1.getXVel() == 0 && (int)e2.getXVel() != 0)
+				//left
+				else if(e1XVel < 0)
 				{
-					if(e2.getXVel() > 0)
+					// left, right
+					if(e2XVel > 0)
 					{
-						difx2 = e1Left - e2Right - 1;
+						if(Math.abs(e1XVel) > Math.abs(e2XVel))
+						{
+							difx = 0;
+							difx2 = e1Left - e2Right - 1;
+						}
+						else if(Math.abs(e1XVel) < Math.abs(e2XVel))
+						{
+							difx = e2Right - e1Left + 1;
+							difx2 = 0;
+						}
+						else
+						{
+							int dif = e2Right - e1Left + 1;
+							difx = dif / 2;
+							if(dif % 2 == 0)
+							{
+								difx2 = -difx;
+							}
+							else
+							{
+								difx2 = -difx - 1;
+							}
+						}
 					}
-					else if(e2.getXVel() < 0)
+					// left, left
+					else if(e2XVel < 0)
 					{
+						if(e1.isToRight(e2))
+						{
+							difx = e2Right - e1Left + 1;
+						}
+						else if(e1.isToLeft(e2))
+						{
+							difx2 = e1Right - e2Left + 1;
+						}
+						else
+						{
+							// do nothing?
+						}
+					}
+					// left, not
+					else if(e2XVel == 0)
+					{
+						difx = e2Right - e1Left + 1;
+						difx2 = 0;
+					}
+				}
+				// not
+				else
+				{
+					// not, right
+					if(e2XVel > 0)
+					{
+						difx = 0;
+						difx2 = e1Left - e2Right -1;
+					}
+					// not, left
+					else if(e2XVel < 0)
+					{
+						difx = 0;
 						difx2 = e1Right - e2Left + 1;
 					}
 				}
-				else if((int)e1.getXVel() != 0 && (int)e2.getXVel() != 0)
-				{
-					// TODO: something...
-				}
 			}
 			
-			if(intersectY)
+			/*
+			 * Vertical Collision
+			 * 
+			 * Before checking for y-axis collisions, update the x-axis velocities and recheck for broad collision. If still colliding, handle vertical collisions as well.
+			 * This will give priority to x-axis collisions, but (should) prevent adjacent velocity collisions from not catching. I'm okay with that.
+			 */
+			e1.setXVel(difx);
+			e2.setXVel(difx);
+			if(entityBroadCollide(e1, e2))
 			{
-				if(e1.getYVel() > 0)
+				// down
+				if(e1YVel > 0)
 				{
-					dify = e2Top - e1Bottom - 1;
+					// down, down
+					if(e2YVel > 0)
+					{
+						if(e1.isAbove(e2))
+						{
+							dify = e2Top - e1Bottom - 1;
+						}
+						else if(e1.isBelow(e2))
+						{
+							dify2 = e1Top - e2Bottom - 1;
+						}
+					}
+					// down, up
+					else if(e2YVel < 0)
+					{
+						if(Math.abs(e1YVel) > Math.abs(e2YVel))
+						{
+							dify = e2Top - e1Bottom - 1;
+							dify2 = 0;
+						}
+						else if(Math.abs(e1YVel) < Math.abs(e2YVel))
+						{
+							dify = 0;
+							dify2 = e1Bottom - e2Top + 1;
+						}
+						else 
+						{
+							int dif = e2Top - e1Bottom - 1;
+							dify = dif / 2;
+							if(dif % 2 == 0)
+							{
+								dify2 = -dify;
+							}
+							else
+							{
+								dify2 = -dify - 1;
+							}
+						}
+					}
+					// down, not
+					else
+					{
+						dify = e2Top - e1Bottom - 1;
+						dify2 = 0;
+					}
 				}
-				else if(e1.getYVel() < 0)
+				// up
+				else if(e1YVel < 0)
 				{
-					dify = e2Bottom - e1Top + 1;
+					// up, down
+					if(e2YVel > 0)
+					{
+						if(Math.abs(e1YVel) > Math.abs(e2YVel))
+						{
+							dify = e2Bottom - e1Top + 1;
+							dify2 = 0;
+						}
+						else if(Math.abs(e1YVel) < Math.abs(e2YVel))
+						{
+							dify = 0;
+							dify2 = e1Top - e2Bottom - 1;
+						}
+						else 
+						{
+							int dif = e2Bottom - e1Top + 1;
+							dify = dif / 2;
+							if(dif % 2 == 0)
+							{
+								dify2 = -dify;
+							}
+							else
+							{
+								dify2 = -dify - 1;
+							}
+						}
+					}
+					// up, up
+					else if(e2YVel < 0)
+					{
+						if(e1.isAbove(e2))
+						{
+							dify = e2Bottom - e1Top + 1;
+						}
+						else if(e1.isBelow(e2))
+						{
+							dify2 = e1Bottom - e2Top + 1;
+						}
+					}
+					// up, not
+					else
+					{
+						dify = e2Bottom - e1Top + 1;
+						dify2 = 0;
+					}
+				}
+				// not
+				else
+				{
+					// not, down
+					if(e2YVel > 0)
+					{
+						dify = 0;
+						dify2 = e1Top - e2Bottom - 1;
+					}
+					// not, up
+					else if(e2YVel < 0)
+					{
+						dify = 0;
+						dify2 = e1Bottom - e2Top + 1;
+					}
 				}
 			}
-		
-			e1.setVelocity(difx, dify);
-			e2.setVelocity(difx2, dify2);
+		}
+	
+		e1.setVelocity(difx, dify);
+		e2.setVelocity(difx2, dify2);
 	}
 	
 	/* -- End of Collision Detection -- */
+	
+	/*
+	 * 
+	 */
+	
+	@Override
+	public void handleInput()
+	{
+		// Reset Everything
+			if(keyPressed(keys.ResetKey()))
+				gameInit();
+			
+			/* Player Control Input */
+			// Horizontal movement
+			if(keyPressed(keys.RightKey()))
+			{
+				player.setXVel(defaultXVelocity);
+			}
+			else if(keyPressed(keys.LeftKey()))
+			{
+				player.setXVel(-defaultXVelocity);
+			}
+			else
+			{
+				player.setXVel(0);	
+			}
+			// Vertical movement
+			if(keyPressed(keys.DownKey()))
+			{
+				player.setYVel(defaultYVelocity);
+			}
+			else if(keyPressed(keys.UpKey()))
+			{
+				player.setYVel(-defaultYVelocity);
+			}
+			else
+			{
+				player.setYVel(0);
+			}
+			
+			// +TEST+ Missile firing.
+			if(keyPressed(keys.ActionKey()))
+			{
+				enemy.setXVel(enemyVel * 2);
+				//enemy2.setYVel(enemyVel);
+				enemy2.setXVel(-enemyVel);
+				if(false)//if(canFire)
+				{
+					canFire = false;
+					SpriteEntity missile = missileResource.copy();
+					missile.setPosition(player.getPosition());
+					int velX = 0;
+					int velY = 0;
+					
+					String playerDirection = player.sprite.getCurrentAnimationName().split("_")[1];
+					if(playerDirection.equals("right"))
+						velX = defaultXVelocity;
+					else if(playerDirection.equals("left"))
+						velX = -defaultXVelocity;
+					else if(playerDirection.equals("down"))
+						velY = defaultYVelocity;
+					else if(playerDirection.equals("up"))
+						velY = -defaultYVelocity;
+					
+					missile.setVelocity(velX, velY);
+					entities.add(missile);
+				}
+			}
+			else
+			{
+				canFire = true;
+			}
+			
+			// mouse testing
+			if(mouse.isPressed(0))
+			{
+				int mouseX = mouse.getX();
+				int mouseY = mouse.getY();
+				int playerCenterX = ((int)player.getXPos() + player.getWidth() / 2) - camera.x;
+				int playerCenterY = ((int)player.getYPos() + player.getHeight() / 2) - camera.y;
+				int playerLeft = (int)player.getXPos() - camera.x;
+				int playerRight = (int)player.getXPos() + player.getWidth() - camera.x;
+				int playerTop = (int)player.getYPos() - camera.y;
+				int playerBottom = (int)player.getYPos() + player.getHeight() - camera.y;
+				
+				if(mouseX > playerCenterX + defaultXVelocity)
+				{
+					player.setXVel(defaultXVelocity);
+				}
+				else if(mouseX < playerCenterX - defaultXVelocity)
+				{
+					player.setXVel(-defaultXVelocity);
+				}
+				
+				if(mouseY > playerCenterY + defaultYVelocity)
+				{
+					player.setYVel(defaultYVelocity);
+				}
+				else if(mouseY < playerCenterY - defaultYVelocity)
+				{
+					player.setYVel(-defaultYVelocity);
+				}
+			}
+			
+	}
+	
+	/* */
 	
 	/*
 	 * Main game life cycle methods
@@ -445,81 +825,41 @@ public class TopDownPanel extends GamePanel {
 		enemy = DataSaver.LoadSpriteEntity("res/entities/dragoon.spriteentity");
 		enemy.sprite.setCurrentAnimation("rest_down_nohelmet");
 		enemy.setPosition(450, 250);
-		enemy.setXVel(1);
+		//enemyVel = 1;
+		enemyDist = 2000;
+		enemyDistMoved = 0;
+		enemy2DistMoved = 0;
+		//enemy.setYVel(enemyVel);
+		enemy.setVelocity(0, 0);
 		enemyMoveTimer = new Timer();
 		enemyMoveTime = 2000;
+		
+		enemy2 = enemy.copy();
+		//enemy2.setPosition(enemy.getXPos() + 200, enemy.getYPos() + enemy2.getHeight());
+		//enemy2.setPosition(enemy.getXPos() + enemy2.getHitBox().getWidth() + 1, enemy.getYPos() - enemy2.getHitBox().getHeight() - 1);
+		//enemy2.setPosition(enemy.getXPos(), enemy.getYPos() - enemy2.getHitBox().getHeight() - 1);
+		enemy2.setPosition(enemy.getXPos(), enemy.getYPos());
+		enemy2.setVelocity(0, 0);
+		
+		int dist = 100;
+		enemy.moveX(-2 *dist);
+		enemy2.moveX(2* dist);
+		//enemy2.moveY(-dist);
+		
 		
 		missileResource = DataSaver.LoadSpriteEntity("res/entities/missile_test.spriteentity");
 		missileResource.setAlive(true);
 		maxMissiles = 3;
 		totalMissiles = 0;
 		canFire = true;
+		
+		message = "";
 	}
 	
 	@Override
 	public void gameUpdate() 
 	{
-		// Reset Everything
-		if(keyPressed(keys.ResetKey()))
-			gameInit();
-		
-		/* Player Control Input */
-		// Horizontal movement
-		if(keyPressed(keys.RightKey()))
-		{
-			player.setXVel(defaultXVelocity);
-		}
-		else if(keyPressed(keys.LeftKey()))
-		{
-			player.setXVel(-defaultXVelocity);
-		}
-		else
-		{
-			player.setXVel(0);	
-		}
-		// Vertical movement
-		if(keyPressed(keys.DownKey()))
-		{
-			player.setYVel(defaultYVelocity);
-		}
-		else if(keyPressed(keys.UpKey()))
-		{
-			player.setYVel(-defaultYVelocity);
-		}
-		else
-		{
-			player.setYVel(0);
-		}
-		
-		// +TEST+ Missile firing.
-		if(keyPressed(keys.ActionKey()))
-		{
-			if(canFire)
-			{
-				canFire = false;
-				SpriteEntity missile = missileResource.copy();
-				missile.setPosition(player.getPosition());
-				int velX = 0;
-				int velY = 0;
-				
-				String playerDirection = player.sprite.getCurrentAnimationName().split("_")[1];
-				if(playerDirection.equals("right"))
-					velX = defaultXVelocity;
-				else if(playerDirection.equals("left"))
-					velX = -defaultXVelocity;
-				else if(playerDirection.equals("down"))
-					velY = defaultYVelocity;
-				else if(playerDirection.equals("up"))
-					velY = -defaultYVelocity;
-				
-				missile.setVelocity(velX, velY);
-				entities.add(missile);
-			}
-		}
-		else
-		{
-			canFire = true;
-		}
+		handleInput();
 		
 		/* Update Player Animation */
 		/*
@@ -610,9 +950,27 @@ public class TopDownPanel extends GamePanel {
 		player.animate();
 		
 		enemy.update();
+		enemy2.update();
+		/*
 		if(enemyMoveTimer.stopwatch(enemyMoveTime))
 		{
-			enemy.setXVel(-enemy.getXVel());
+			//enemy.setXVel(-enemy.getXVel());
+			enemyVel *= -1;
+		}
+		if((int)enemy.getXVel() != enemyVel)
+		{
+			enemy.setXVel(enemyVel);
+		}
+		*/
+		enemyDistMoved += Math.abs((int)enemy.getYVel());
+		if(enemyDistMoved >= enemyDist)
+		{
+			enemyDistMoved = 0;
+			enemyVel *= -1;
+		}
+		if((int)enemy.getYVel() != enemyVel)
+		{
+			//enemy.setYVel(enemyVel);
 		}
 		
 		for(Entity e : entities.list())
@@ -645,6 +1003,7 @@ public class TopDownPanel extends GamePanel {
 		map.drawGrid(dbg, camera);
 		
 		enemy.draw(dbg, camera);
+		enemy2.draw(dbg, camera);
 		
 		player.draw(dbg, camera);
 		
@@ -662,6 +1021,8 @@ public class TopDownPanel extends GamePanel {
 		
 		dbg.drawString(String.format("Camera: (%d, %d)", camera.x, camera.y), 5, fontInfo.getHeight() * 2);
 		dbg.drawString(String.format("Player: (%d, %d)", (int)player.getXPos(), (int)player.getYPos()), 5, fontInfo.getHeight() * 3);
+		dbg.drawString(String.format("Mouse: (%d, %d)", mouse.getX(), mouse.getY()), 5, fontInfo.getHeight() * 4);
+		dbg.drawString(message, 5, fontInfo.getHeight() * 5);
 	}
 	
 	/* -- End life cycle methods -- */

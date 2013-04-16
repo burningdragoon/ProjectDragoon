@@ -103,13 +103,13 @@ public class SimpleAnimatedBattle extends GameComponent {
 		SpriteAnimation walkAnim = new SpriteAnimation(2);
 		int[] walkFrames = {1,2};
 		walkAnim.setFrames(walkFrames);
-		walkAnim.setDelay(200);
+		walkAnim.setFrameDelay(200);
 		sprite.AddAnimations("Walk", walkAnim);
 		
 		SpriteAnimation attackAnim = new SpriteAnimation(2);
 		int[] attFrames = {6,5};
 		attackAnim.setFrames(attFrames);
-		attackAnim.setDelay(200);
+		attackAnim.setFrameDelay(200);
 		sprite.AddAnimations("Attack", attackAnim);
 		
 		/*
@@ -132,7 +132,7 @@ public class SimpleAnimatedBattle extends GameComponent {
 	
 	public boolean isKeyPressed(int keyCode)
 	{
-		return ((GamePanel)this.getParent()).getKeyHandler().keyPressed(keyCode);
+		return ((GamePanel)this.getParent()).getKeyboard().keyPressed(keyCode);
 	}
 	
 	public KeyValues getKeys()

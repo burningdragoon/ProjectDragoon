@@ -12,10 +12,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.ProjectDragoon.entity.SpriteEntity;
 import com.ProjectDragoon.physics.HitBox;
 import com.ProjectDragoon.sprites.Sprite;
 import com.ProjectDragoon.sprites.SpriteAnimation;
-import com.ProjectDragoon.sprites.SpriteEntity;
 import com.ProjectDragoon.util.Vector;
 
 public class ResourceManager {
@@ -132,13 +132,36 @@ public class ResourceManager {
 				}
 				
 				//delay
-				int delay = Integer.parseInt(
-						animation.getElementsByTagName("delay").item(0).getTextContent()
-						);
+				//int delay = Integer.parseInt(
+				//		animation.getElementsByTagName("delay").item(0).getTextContent()
+				//		);
+				int[] delays = new int[frames.length];
+				String delayString = animation.getElementsByTagName("delay").item(0).getTextContent();
+				String[] delayStrings = delayString.split(",");
+				if(delayStrings.length == 1)
+				{
+					int delay = Integer.parseInt(delayStrings[0]);
+					for(int i = 0; i < delays.length; i++)
+					{
+						delays[i] = delay;
+					}
+				}
+				else if(delays.length == delayStrings.length)
+				{
+					for(int i = 0; i < delays.length; i++)
+					{
+						delays[i] = Integer.parseInt(delayStrings[i]);
+					}
+				}
+				else
+				{
+					// don't let this happen, okay? okay.
+				}
 				
 				SpriteAnimation spriteAnim = new SpriteAnimation(frames.length);
 				spriteAnim.setFrames(frames);
-				spriteAnim.setDelay(delay);
+				//spriteAnim.setDelay(delays[0]);
+				spriteAnim.setFrameDelay(delays);
 				
 				sprite.AddAnimations(animName, spriteAnim);
 			}

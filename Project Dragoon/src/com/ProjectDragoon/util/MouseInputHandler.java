@@ -18,6 +18,9 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener {
 	private int mouseX;
 	private int mouseY;
 	
+	private int pressedX;
+	private int pressedY;
+	
 	// Click Event variables
 	// clickTime is the point in time when the mouse's "click" event last fired.
 	// clickLength is how long the "clicked" state remains active 
@@ -33,6 +36,9 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener {
 		mouseX = 0;
 		mouseY = 0;
 		
+		pressedX = 0;
+		pressedY = 0;
+		
 		clickLength = 100L;
 		clickTimes = new long[MOUSE_BUTTONS];
 		clickActive = new boolean[MOUSE_BUTTONS];
@@ -46,6 +52,9 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener {
 	
 	public int getX() { return mouseX; }
 	public int getY() { return mouseY; }
+	
+	public int getPressedX() { return pressedX; }
+	public int getPressedY() { return pressedY; }
 	
 	/**
 	 * 0: Button 1 / MouseEvent.BUTTON1. Most likely left mouse button
@@ -83,6 +92,11 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener {
 	 * Other...
 	 */
 	
+	public boolean inBounds(int button)
+	{
+		return button >= 0 && button < MOUSE_BUTTONS;
+	}
+	
 	/**
 	 * Is the mouse's click event active.
 	 * @param button
@@ -90,7 +104,7 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener {
 	 */
 	public boolean isClicked(int button)
 	{
-		if (button < 0 || button >= MOUSE_BUTTONS)
+		if (!inBounds(button))
 			return false;
 		else
 		{
@@ -99,6 +113,19 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener {
 			if(clicked)
 				clickActive[button] = false;
 			
+			return clicked;
+		}
+	}
+	
+	public boolean isClickWindowOpen(int button)
+	{
+		if(!inBounds(button))
+		{
+			return false;
+		}
+		else
+		{
+			boolean clicked = clickActive[button] && MyMath.nanoToMilli(System.nanoTime()) - clickTimes[button] <= clickLength;
 			return clicked;
 		}
 	}
@@ -185,12 +212,16 @@ public class MouseInputHandler implements MouseListener, MouseMotionListener {
 	public void mousePressed(MouseEvent e) 
 	{
 		toggleMousePress(e, true);
+		pressedX = e.getX();
+		pressedY = e.getY();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) 
 	{	
 		toggleMousePress(e, false);
+		pressedX = -1;
+		pressedY = -1;
 	}
 	
 	/* --- End Mouse Listener --- */

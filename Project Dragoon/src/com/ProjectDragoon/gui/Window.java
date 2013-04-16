@@ -2,7 +2,9 @@ package com.ProjectDragoon.gui;
 
 import java.awt.Graphics;
 
+import com.ProjectDragoon.entity.Entity;
 import com.ProjectDragoon.graphics.Texture;
+import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
 
 /**
@@ -29,7 +31,7 @@ import com.ProjectDragoon.util.Vector;
  * @author Alex
  *
  */
-public class Window {
+public class Window extends Entity {
 
 	private Texture windowFrame;
 	private Texture windowPattern;
@@ -49,7 +51,7 @@ public class Window {
 	private int patternOffsetX;
 	private int patternOffsetY;
 	
-	private Vector position;
+	//private Vector position;
 	
 	/*
 	 * Constructors
@@ -109,18 +111,18 @@ public class Window {
 	public void setPatternOffsetY(int y) { patternOffsetY = y; }
 	
 	//screen position
-	public Vector getPosition()	{	return position;	}
-	public void setPosition(Vector v) {	position.set(v);	}
-	public void setPosition(double x, double y) {	position.set(x, y, 0);	}
-	public void setPosition(int x, int y) {	position.set(x, y, 0);	}
+	//public Vector getPosition()	{	return position;	}
+	//public void setPosition(Vector v) {	position.set(v);	}
+	//public void setPosition(double x, double y) {	position.set(x, y, 0);	}
+	//public void setPosition(int x, int y) {	position.set(x, y, 0);	}
 	
-	public double getXPos() {	return position.getX();	}
-	public void setXPos(double x) {	position.setX(x);	}
-	public void setXPos(int x) {	position.setX(x);	}
+	//public double getXPos() {	return position.getX();	}
+	//public void setXPos(double x) {	position.setX(x);	}
+	//public void setXPos(int x) {	position.setX(x);	}
 	
-	public double getYPos()	{	return position.getY();	}
-	public void setYPos(double y) {	position.setY(y);	}
-	public void setYPos(int y) {	position.setY(y);	}
+	//public double getYPos()	{	return position.getY();	}
+	//public void setYPos(double y) {	position.setY(y);	}
+	//public void setYPos(int y) {	position.setY(y);	}
 	
 	
 	/* -- End S&M -- */
@@ -175,6 +177,19 @@ public class Window {
 	
 	/* -- End Image setup -- */
 	
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void animate() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public void draw(Graphics g)
 	{
 		//draw pattern at offset
@@ -361,4 +376,20 @@ public class Window {
 			}
 		}
 	}
+	
+	@Override
+	public void draw(Graphics g, Camera c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Object copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	
+
 }

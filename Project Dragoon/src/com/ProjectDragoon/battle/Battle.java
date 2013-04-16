@@ -4,17 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import com.ProjectDragoon.Entity;
-import com.ProjectDragoon.EntityList;
 import com.ProjectDragoon.Game;
 import com.ProjectDragoon.GameComponent;
 import com.ProjectDragoon.GamePanel;
 import com.ProjectDragoon.KeyValues;
+import com.ProjectDragoon.entity.Entity;
+import com.ProjectDragoon.entity.EntityList;
+import com.ProjectDragoon.entity.NumberSprite;
+import com.ProjectDragoon.entity.SpriteEntity;
 import com.ProjectDragoon.graphics.ImageEntity;
 import com.ProjectDragoon.graphics.Texture;
-import com.ProjectDragoon.sprites.NumberSprite;
 import com.ProjectDragoon.sprites.Sprite;
-import com.ProjectDragoon.sprites.SpriteEntity;
 import com.ProjectDragoon.testpanels.SimpleAnimatedBattlePanel;
 import com.ProjectDragoon.unit.BattleUnit;
 import com.ProjectDragoon.util.KeyTimer;
@@ -699,7 +699,7 @@ public class Battle extends GameComponent {
 	
 	public boolean isKeyPressed(int keyCode)
 	{
-		return ((GamePanel)this.getParent()).getKeyHandler().keyPressed(keyCode);
+		return ((GamePanel)this.getParent()).getKeyboard().keyPressed(keyCode);
 	}
 	
 	public KeyValues getKeys()

@@ -1,7 +1,7 @@
 package com.ProjectDragoon;
 
 /**
- * The cleverly named DragonPanel is the main GamePanel for the equally cleverly named Project Dragoon. 
+ * The cleverly named DragonPanel is the main GamePanel for the equally cleverly named Project Dragoon. Since I'm still playing around with ideas, it is currently empty.
  * @author Alex
  *
  */

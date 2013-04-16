@@ -10,17 +10,17 @@ import com.ProjectDragoon.graphics.Texture;
 import com.ProjectDragoon.util.Vector;
 import com.ProjectDragoon.util.interfaces.Utility;
 
-public class Sprite implements Utility {
+public class Sprite extends SimpleSprite { //implements Utility {
 
 	private static final long serialVersionUID = 1L;
 	
 	// Spritesheet Image variables
-	private transient Texture spritesheet;
-	private String spritesheetFile;
-	private int width, height;
-	private int columns;
-	private int curFrame, totalFrames;
-	private boolean imageLoaded;
+	//private transient Texture spritesheet;
+	//private String spritesheetFile;
+	//private int width, height;
+	//private int columns;
+	//private int curFrame, totalFrames;
+	//private boolean imageLoaded;
 	
 	// Animation variables
 	private HashMap<String, SpriteAnimation> animations;
@@ -42,14 +42,15 @@ public class Sprite implements Utility {
 	 */
 	public Sprite()
 	{	
-		spritesheet = new Texture();
-		spritesheetFile = "";
-		width = 1;
-		height = 1;
-		columns = 1;
-		curFrame = 0;
-		totalFrames = 1;
-		imageLoaded = false;
+		//spritesheet = new Texture();
+		//spritesheetFile = "";
+		//width = 1;
+		//height = 1;
+		//columns = 1;
+		//curFrame = 0;
+		//totalFrames = 1;
+		//imageLoaded = false;
+		super();
 		
 		animations = new HashMap<String, SpriteAnimation>();
 		currentAnim = null;
@@ -102,6 +103,7 @@ public class Sprite implements Utility {
 	*/
 	
 	// Spritesheet image
+	/*
 	public Texture getSpritesheet() {	return spritesheet;	}
 	public void setSpritesheet(Texture sheet) {	spritesheet = sheet;	}
 	public void setSpritesheet(BufferedImage sheet) {	spritesheet.setImage(sheet);	}
@@ -123,7 +125,7 @@ public class Sprite implements Utility {
 	
 	public boolean isImageLoaded() {	return imageLoaded;	}
 	public void setImageLoaded(boolean value) {	imageLoaded = value;	}
-	
+	*/
 	
 	// Animation
 	public HashMap<String, SpriteAnimation> getAnimations() {	return animations;	}
@@ -147,7 +149,7 @@ public class Sprite implements Utility {
 	/*
 	 * Sprite configuring methods
 	 */
-	
+	/*
 	public boolean loadImage(String filename)
 	{
 		spritesheetFile = filename;
@@ -175,7 +177,7 @@ public class Sprite implements Utility {
 		width = imgWidth / columns;
 		height = imgHeight / rows;
 	}
-	
+	*/
 	/* -- End Sprite config -- */
 	
 	/*
@@ -199,10 +201,11 @@ public class Sprite implements Utility {
 		}
 		currentAnimName = name;
 		currentAnim = animations.get(name);
-		framestart = MyMath.nanoToMilli(System.nanoTime());
-		frametimer = currentAnim.getDelay();
 		curFrame = currentAnim.getFrame(0);
 		currentAnimFrame = 0;
+		framestart = MyMath.nanoToMilli(System.nanoTime());
+		//frametimer = currentAnim.getDelay();
+		frametimer = currentAnim.getFrameDelay(currentAnimFrame);
 	}
 	
 	public void resetAnimation()
@@ -235,8 +238,6 @@ public class Sprite implements Utility {
 				long time = System.nanoTime();
 				if(MyMath.nanoToMilli(time) > (framestart + frametimer))
 				{
-					//reset animation timer
-					framestart = MyMath.nanoToMilli(System.nanoTime());
 					currentAnimFrame += animDir;
 					
 					// keep the frame within bounds
@@ -244,6 +245,10 @@ public class Sprite implements Utility {
 						currentAnimFrame = currentAnim.getLength()-1;
 					else if(currentAnimFrame > currentAnim.getLength()-1)
 						currentAnimFrame = 0;
+					
+					//reset animation timer
+					framestart = MyMath.nanoToMilli(System.nanoTime());
+					frametimer = currentAnim.getFrameDelay(currentAnimFrame);
 				}
 			}
 			else
@@ -293,7 +298,7 @@ public class Sprite implements Utility {
 	/*
 	 * Drawing Methods
 	 */
-	
+	/*
 	public void draw(Graphics g, int xPos, int yPos, boolean forward)
 	{
 		// get the x,y for the current frame
@@ -305,9 +310,9 @@ public class Sprite implements Utility {
 		
 		spritesheet.draw(g, desX, desY, fx, fy, width, height, forward);
 		
-		g.setColor(Color.red);
-		g.drawString(""+curFrame+"/"+(totalFrames-1), desX, desY);
-		g.setColor(Color.black);
+		//g.setColor(Color.red);
+		//g.drawString(""+curFrame+"/"+(totalFrames-1), desX, desY);
+		//g.setColor(Color.black);
 	}
 	
 	public void draw(Graphics g, int xPos, int yPos) 
@@ -326,7 +331,7 @@ public class Sprite implements Utility {
 		g.setColor(Color.red);
 		g.drawString(""+curFrame+"/"+(totalFrames-1), desX, desY);
 		g.setColor(Color.black);
-		*/
+		* /
 		draw(g, xPos, yPos, true);
 	}
 	
@@ -344,7 +349,7 @@ public class Sprite implements Utility {
 	{
 		draw(g, (int)xPos, (int)yPos);
 	}
-	
+	*/
 	/* -- End Drawing -- */
 	
 	/*
@@ -365,6 +370,8 @@ public class Sprite implements Utility {
 		s.columns = columns;
 		s.curFrame = curFrame;
 		s.totalFrames = totalFrames;
+
+		
 		
 		s.animations = new HashMap<String, SpriteAnimation>();
 		for(String name : animations.keySet())
@@ -382,12 +389,14 @@ public class Sprite implements Utility {
 		return s;
 	}
 	
+	/*
 	@Override
 	public void restore() 
 	{
 		reloadImage();
 	}
-
+	*/
+	
 	/* -- End Utility -- */
 	
 	/*

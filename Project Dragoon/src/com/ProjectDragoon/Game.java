@@ -13,16 +13,17 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.RepaintManager;
 
-import com.ProjectDragoon.testpanels.PlatformerPanel;
-import com.ProjectDragoon.testpanels.TopDownPanel;
+import com.ProjectDragoon.testpanels.CoinFlipPanel;
 import com.ProjectDragoon.util.NoRepaintManager;
 
 public class Game extends JFrame implements WindowListener {
 
 	private static final long serialVersionUID = 1L;
-	private static int DEFAULT_FPS = 60;
-	private static final int WIDTH = 800;
-	private static final int HEIGHT = 640;
+	private static int DEFAULT_FPS = 30;
+	//private static final int WIDTH = 800;
+	//private static final int HEIGHT = 640;
+	private static final int WIDTH = 200;
+	private static final int HEIGHT = 240;
 	
 	// Account for the window frame.
 	// will worry about programmatic way to do this later...
@@ -40,15 +41,18 @@ public class Game extends JFrame implements WindowListener {
 		super("Project Dragoon");
 		
 		Container gameContainer = getContentPane();
-		//gamePanel = new BattlePanel(WIDTH, HEIGHT, period);
-		//gamePanel = new SimpleBattlePanel(WIDTH, HEIGHT, period);
-		//gamePanel = new ImagePanel(WIDTH, HEIGHT, period);
+		//gamePanel = new BattlePanel(this, WIDTH, HEIGHT, period);
+		//gamePanel = new SimpleBattlePanel(this, WIDTH, HEIGHT, period);
+		//gamePanel = new ImagePanel(this, WIDTH, HEIGHT, period);
 		//gamePanel = new SimpleAnimatedBattlePanel(this, WIDTH, HEIGHT, period);
 		//gamePanel = new WindowPanel(this, WIDTH, HEIGHT, period);
 		//gamePanel = new TileMapTestPanel(this, WIDTH, HEIGHT, period);
 		//gamePanel = new ScrollingTilesPanel(this, WIDTH, HEIGHT, period);
 		//gamePanel = new PlatformerPanel(this, WIDTH, HEIGHT, period);
-		gamePanel = new TopDownPanel(this, WIDTH, HEIGHT, period);
+		//gamePanel = new TopDownPanel(this, WIDTH, HEIGHT, period);
+		//gamePanel = new TileMovementPanel(this, WIDTH, HEIGHT, period);
+		//gamePanel = new StatesPanel(this, WIDTH, HEIGHT, period);
+		gamePanel = new CoinFlipPanel(this, WIDTH, HEIGHT, period);
 		
 		// Absolute Positioning is not the best approach for UI, but whatevs for now.
         gamePanel.setLayout(null);

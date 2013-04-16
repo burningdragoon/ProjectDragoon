@@ -1,6 +1,7 @@
-package com.ProjectDragoon;
+package com.ProjectDragoon.entity;
 
 import java.util.concurrent.CopyOnWriteArrayList;
+
 
 public class EntityList {
 
@@ -21,14 +22,14 @@ public class EntityList {
 		return entities.add(entity);
 	}
 	
-	public void remove(int index)
+	public Entity remove(int index)
 	{
-		entities.remove(index);
+		return entities.remove(index);
 	}
 	
-	public void remove(Entity e)
+	public boolean remove(Entity e)
 	{
-		entities.remove(e);
+		return entities.remove(e);
 	}
 	
 	public int size()

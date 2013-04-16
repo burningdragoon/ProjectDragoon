@@ -139,11 +139,12 @@ public class HitBox implements Utility {
 	
 	public void draw(Graphics g, Camera camera)
 	{
-		g.setColor(Color.red);
-		Vector v = this.TopLeft();
-		int x = (int)v.getX();
-		int y = (int)v.getY();
-		g.drawRect(x - camera.x, y - camera.y, width, height);
+		g.setColor(Color.gray);
+		
+		//Vector v = this.TopLeft();
+		int x = left();// (int)v.getX();
+		int y = top();//(int)v.getY();
+		//g.fillRect(x - camera.x, y - camera.y, width, height);
 	}
 
 	/* -- End Drawing methods -- */

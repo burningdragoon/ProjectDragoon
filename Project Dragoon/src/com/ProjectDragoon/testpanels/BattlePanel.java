@@ -139,7 +139,7 @@ public class BattlePanel extends GamePanel {
 	protected void gameUpdate()
 	{
 		// check if any exit keys have been pressed...
-		if(keyHandler.keyPressed(KeyEvent.VK_ESCAPE))
+		if(keyboard.keyPressed(KeyEvent.VK_ESCAPE))
 		{
 			//exit game.
 		}
@@ -172,8 +172,8 @@ public class BattlePanel extends GamePanel {
 					 * 	 		- if no, reset to no delay
 					 */
 					boolean up, down;
-					up = keyHandler.keyPressed(keys.UpKey());
-					down = keyHandler.keyPressed(keys.DownKey());
+					up = keyboard.keyPressed(keys.UpKey());
+					down = keyboard.keyPressed(keys.DownKey());
 					if(up || down)
 					{
 						if(dirKeyTimer.stopwatch())
@@ -220,7 +220,7 @@ public class BattlePanel extends GamePanel {
 					 */
 					
 					// check for attack key
-					if(keyHandler.keyPressed(keys.ActionKey()))
+					if(keyboard.keyPressed(keys.ActionKey()))
 					{
 						System.out.println("Action Key!");
 						// grab the current target
@@ -327,7 +327,7 @@ public class BattlePanel extends GamePanel {
 			}
 			else
 			{
-				if(keyHandler.keyPressed(keys.BackKey()))
+				if(keyboard.keyPressed(keys.BackKey()))
 				{	
 					for(int i = 0; i < teams[0].length; i++)
 					{
@@ -426,7 +426,7 @@ public class BattlePanel extends GamePanel {
 		}
 		dbg.setColor(Color.black);
 		
-		if(keyHandler.keyPressed(keys.ActionKey()))
+		if(keyboard.keyPressed(keys.ActionKey()))
 		{
 			int xx = ((Game)this.getTopLevelAncestor()).i;
 			dbg.setColor(Color.white);

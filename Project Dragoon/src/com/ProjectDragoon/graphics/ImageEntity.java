@@ -2,7 +2,7 @@ package com.ProjectDragoon.graphics;
 
 import java.awt.Graphics;
 
-import com.ProjectDragoon.Entity;
+import com.ProjectDragoon.entity.Entity;
 import com.ProjectDragoon.util.Camera;
 import com.ProjectDragoon.util.Vector;
 

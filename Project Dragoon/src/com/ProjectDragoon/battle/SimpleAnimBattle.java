@@ -5,12 +5,12 @@ import java.awt.Graphics;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.ProjectDragoon.Entity;
 import com.ProjectDragoon.GameComponent;
 import com.ProjectDragoon.GamePanel;
 import com.ProjectDragoon.KeyValues;
+import com.ProjectDragoon.entity.Entity;
+import com.ProjectDragoon.entity.NumberSprite;
 import com.ProjectDragoon.graphics.Texture;
-import com.ProjectDragoon.sprites.NumberSprite;
 import com.ProjectDragoon.sprites.Sprite;
 import com.ProjectDragoon.testpanels.SimpleAnimatedBattlePanel;
 import com.ProjectDragoon.unit.BattleUnit;
@@ -130,7 +130,7 @@ public class SimpleAnimBattle extends GameComponent {
 	
 	public boolean isKeyPressed(int keyCode)
 	{
-		return ((GamePanel)this.getParent()).getKeyHandler().keyPressed(keyCode);
+		return ((GamePanel)this.getParent()).getKeyboard().keyPressed(keyCode);
 	}
 	
 	public KeyValues getKeys()
